@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio for Mac
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MG_Infinity(DEMO)", "Assembly-CSharp.csproj", "{210D8D06-5C5D-90E4-0FE6-C12E58D3BC84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{210D8D06-5C5D-90E4-0FE6-C12E58D3BC84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MG_Infinity(DEMO)", "Assembly-CSharp-firstpass.csproj", "{E8E60714-7E5F-A30C-7942-4DAAF5CFB02F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{E8E60714-7E5F-A30C-7942-4DAAF5CFB02F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
 	public AudioSource audioSource;
 	public Text scoreLabel;
 	private int[,] routeRadian;
-	private var routeDict;
+	private Dictionary<string,int[]> routeDict;
 	
 
 

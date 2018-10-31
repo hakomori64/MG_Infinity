@@ -15,14 +15,15 @@ EditorBuildSettings:
     path: Assets/scenes/option.unity
     guid: a470581365c0d496d9a73ae6a4df3242
   - enabled: 1
-    path: Assets/scenes/thumnail.unity
+    path: Assets/scenes/thumbnail.unity
     guid: b4f4eedee7a8641b990918f69e36f6a7
   - enabled: 1
     path: Assets/scenes/play.unity
     guid: 5fbfcb259124d431e9ad11d682b5f9a0
-  - enabled: 1
-    path: Assets/scenes/pause.unity
-    guid: 41998d1983e2a453d8fae78597e2de25
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/scenes/result.unity
     guid: a7583be22705e47b08f059794f1c351d
+  m_configObjects: {}

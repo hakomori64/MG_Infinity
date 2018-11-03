@@ -27,9 +27,9 @@ public class GameController : MonoBehaviour {
 	public Text scoreLabel;
 	//private int[,] routeRadian;
 	private Dictionary<string,int[]> routeDict;
-	public GameObject note;
+	public GameObject noteController;
 	
-	private List<GameObject[]> generatedNotes;
+	private List<GameObject> generatedNoteControllers;
 
 	private Dictionary<char, int[]> hex_number = new Dictionary<char, int[]>()
 	{
@@ -83,8 +83,8 @@ public class GameController : MonoBehaviour {
 		// init route dictionary.
 		initRouteDict();
 
-		// init notes
-		initNotes();
+		// init noteControllers
+		initNoteControllers();
 
 		pauseScene.SetActive(false);
 		pauseButton.SetActive(false);
@@ -161,7 +161,7 @@ public class GameController : MonoBehaviour {
 
 		for (int i = 0; i < scanningRange; i++) {
 			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - (radius/speed) <= time && chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - (radius/speed) >= time) {
-				
+				generatedNoteControllers[i].SetActive(true);
 				processedNotesCount++;
 			}
 		}
@@ -306,20 +306,15 @@ public class GameController : MonoBehaviour {
 
 	}
 
-	void initNotes() {
-		generatedNotes = new List<GameObject[]>();
+	void initNoteControllers() {
+		generatedNoteControllers = new List<GameObject>();
 
 		for (int i = 0; i < chart.notesTime.Length; i++) {
-			if (chart.route[i].Length == 1) { // swipe
-				GameObject _notes = new GameObject;
-				
-				_notes = Instantiate(this.note, transform.position, transform.rotation) as GameObject;
-
-				Note noteComponent = _notes.GetComponent<Note>();
-				noteComponent.Create(chart.notesTime[i][0], speed, hex_number[chart.route[i][0]]);
-			} else {
-				
-			}
+			GameObject _noteController = Instantiate(noteController, transform.position, transform.rotation) as GameObject;
+			_noteController.SetActive(false);
+			NoteController noteControllerComponent = _noteController.GetComponent<NoteController>();
+			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed);
+			generatedNoteControllers.Add(_noteController);
 		}
 	}
 	

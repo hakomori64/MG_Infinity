@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\scripts\play\GameController.cs" />
      <Compile Include="Assets\scripts\play\GameIndicator.cs" />
+     <Compile Include="Assets\scripts\play\Note.cs" />
      <Compile Include="Assets\scripts\play\NoteController.cs" />
      <Compile Include="Assets\scripts\play\TimerController.cs" />
      <Compile Include="Assets\scripts\select\back_button.cs" />

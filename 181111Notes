@@ -1,0 +1,16 @@
+# Notes
+Sun Nov 11 00:11:33 JST 2018
+
+NoteControllerでぜんてい
+- HitNotes
+- LongNotes
+- SwipeNotes
+これらの判別をしているのが、
+  - HitNotes→start endのタイムが同値
+  - start!=end
+    * routeのながさが1
+      → LongNotes
+      Else →SwipeNotes
+  - this.notes[N]が
+      * N=0→始点のノーツ
+      * N=1

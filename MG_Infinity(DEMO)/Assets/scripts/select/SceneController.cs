@@ -65,12 +65,12 @@ public class SceneController : MonoBehaviour {
 
 	//returnボタン
 	public void moveStart(){
-		SceneManager.LoadScene("start",LoadSceneMode.Single);
+		SceneManager.LoadScene("start");
 	}
 
 	//playボタン
 	public void movePlay(){
-		SceneManager.LoadScene("play", LoadSceneMode.Single);
+		SceneManager.LoadScene("play");
 	}
 
 	//一つ上の曲
@@ -86,18 +86,22 @@ public class SceneController : MonoBehaviour {
 	//easyボタン
 	public void chengeToEasy(){
 		sceneDif = 0;
+		Debug.Log(sceneDif);
 	}
 	//mediumボタン
 	public void chengeToMedium(){
 		sceneDif = 1;
+		Debug.Log(sceneDif);
 	}
 	//hardボタン
 	public void chengeToHard(){
 		sceneDif = 2;
+		Debug.Log(sceneDif);
 	}
 	//infinityボタン
 	public void changeToInfinity(){
 		sceneDif = 3;
+		Debug.Log(sceneDif);
 	}
 	//sortボタン
 	public void musicNameSort(){
@@ -119,6 +123,10 @@ public class SceneController : MonoBehaviour {
 		/*
 		sortする。以上
 		*/
+	}
+
+	public int difficultNum(){
+		return sceneDif;
 	}
 
 	// Use this for initialization

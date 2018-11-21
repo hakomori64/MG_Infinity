@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class back_button : MonoBehaviour {
-
+	SceneController scene = new SceneController();
 	// Use this for initialization
 	void Start () {
 		
@@ -17,6 +17,6 @@ public class back_button : MonoBehaviour {
 
     public void OnClick()
     {
-        SceneManager.LoadScene("start");
+        scene.moveStart();
     }
 }

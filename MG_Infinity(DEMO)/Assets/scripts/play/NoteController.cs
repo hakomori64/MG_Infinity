@@ -21,12 +21,14 @@ public class NoteController : MonoBehaviour {
 	private float time = 0;
 	public GameObject notePrefab;
 	private GameObject[] notes;
+
+
 	void Start () {
+		notePrefab = (GameObject)Resources.Load("prefabs/Note");
 		detectKindsOfNote();
-		
-		//notePrefab = (GameObject)Resources.Load("prefabs/note");
+
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (time == 0) {
@@ -46,7 +48,7 @@ public class NoteController : MonoBehaviour {
 			}
 			this.gameObject.SetActive(false);
 		}
-		
+
 		time += Time.deltaTime;
 	}
 	public void Create (int id, string route, double start, double end, float radius, float speed) {
@@ -56,9 +58,9 @@ public class NoteController : MonoBehaviour {
 		this.end = end;
 		this.radius = radius;
 		this.speed = speed;
-		Debug.Log((int)KindsOfNote.HitNotes);
-		Debug.Log((int)KindsOfNote.LongNotes);
-		Debug.Log((int)KindsOfNote.SwipeNotes);
+		// Debug.Log((int)KindsOfNote.HitNotes);
+		// Debug.Log((int)KindsOfNote.LongNotes);
+		// Debug.Log((int)KindsOfNote.SwipeNotes);
 	}
 
 	//
@@ -70,19 +72,21 @@ public class NoteController : MonoBehaviour {
 			Note _note = this.notes[0].GetComponent<Note>();
 			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
 		} else { //long | swipe note
-			this.notes = new GameObject[2];
-			this.notes[0] = Instantiate(notePrefab, transform.position, transform.rotation);
-			Note _note = this.notes[0].GetComponent<Note>();
-			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)kindOfNote, true);
-			this.notes[1] = Instantiate(notePrefab, transform.position, transform.rotation);
-			_note = this.notes[1].GetComponent<Note>();
-			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, false);
-			
 			if (this.route.Length == 1) {
 				this.kindOfNote = KindsOfNote.LongNotes;
 			} else {
 				this.kindOfNote = KindsOfNote.SwipeNotes;
 			}
+			this.notes = new GameObject[2];
+			this.notes[0] = Instantiate(notePrefab, transform.position, transform.rotation);
+			Note _note = this.notes[0].GetComponent<Note>();
+			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
+			this.notes[1] = Instantiate(notePrefab, transform.position, transform.rotation);
+			_note = this.notes[1].GetComponent<Note>();
+			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, false);
+			notes[1].transform.parent = notes[0].transform;// 紐づけ
+
+
 		}
 	}
 }

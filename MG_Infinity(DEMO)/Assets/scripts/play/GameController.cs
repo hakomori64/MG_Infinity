@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour {
 	//private int[,] routeRadian;
 	private Dictionary<string,int[]> routeDict;
 	public GameObject noteController;
-	
+
 	private List<GameObject> generatedNoteControllers;
 
 	private Dictionary<char, int[]> hex_number = new Dictionary<char, int[]>()
@@ -79,7 +79,7 @@ public class GameController : MonoBehaviour {
 
 		// init scoreLabel
 		initScoreLabel();
-		
+
 		// init route dictionary.
 		initRouteDict();
 
@@ -93,7 +93,7 @@ public class GameController : MonoBehaviour {
 
 		phase = Phase.beforeTouchToStart;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		switch (phase)
@@ -129,7 +129,7 @@ public class GameController : MonoBehaviour {
 		touchToStart.SetActive(false);
 		timerController.SetActive(true);
 		timer.SetActive(true);
-		phase = Phase.afterTouchToStart;	
+		phase = Phase.afterTouchToStart;
 	}
 
 	void afterTouchToStart() {
@@ -147,11 +147,12 @@ public class GameController : MonoBehaviour {
 	}
 
 	void playing() {
-		
+
 		int processedNotesCount = 0;
+		float gap = radius/speed; // time between InstantiatedNotes and Touched time
 		//Debug.Log("notes speed is:" + speed);
 		//Debug.Log("number of notes:" + chart.notesTime.Length);
-		
+
 		int scanningRange;
 		if (chart.notesTime.Length - numberOfInstantiatedNotes >= 10) {
 			scanningRange = 10;
@@ -160,7 +161,8 @@ public class GameController : MonoBehaviour {
 		}
 
 		for (int i = 0; i < scanningRange; i++) {
-			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - (radius/speed) <= time && chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - (radius/speed) >= time) {
+			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time &&
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time) {
 				generatedNoteControllers[i].SetActive(true);
 				processedNotesCount++;
 			}
@@ -220,7 +222,7 @@ public class GameController : MonoBehaviour {
 			speed = SceneController.getSpeed();
 			hit_decision = SceneController.getDecision();
 		}
-		
+
 
 		string difficultyFolder = "";
 
@@ -238,18 +240,18 @@ public class GameController : MonoBehaviour {
 				difficultyFolder = "infinity";
 				break;
 		}
-		
+
 		string path = "chart/" + difficultyFolder + "/" + id.ToString("D5") + "_" + composer + "_" + title;
 		string json = Resources.Load(path).ToString();
-		
+
 		chart = JsonMapper.ToObject<ChartDataBody>(json);
-		
+
 		Debug.Log("chart in json format:" + json);
 		Debug.Log("difficulty: " + chart.difficulty[0] + chart.difficulty[1]);
 		Debug.Log("offset to start: " + chart.offset);
 		Debug.Log("route: " + chart.route[0]);
 		Debug.Log("number of notes: " + chart.notesTime.Length);
-		
+
 	}
 
 	void initAudioSource() {
@@ -262,7 +264,7 @@ public class GameController : MonoBehaviour {
 		scoreValue = 0;
 		scoreLabel.text = scoreValue.ToString("D6");
 	}
-	
+
 	void initRouteDict(){
 		// 	Who am I? - Human No 0-F wo CockDo 2 HengKang through
 		// 3: 0,1，2  どっちの円から出るか、してん、しゅうてんのかくど
@@ -317,5 +319,5 @@ public class GameController : MonoBehaviour {
 			generatedNoteControllers.Add(_noteController);
 		}
 	}
-	
+
 }

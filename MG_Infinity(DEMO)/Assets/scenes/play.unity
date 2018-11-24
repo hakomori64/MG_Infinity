@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfInstantiatedNotes: 0
-  radius: 5
+  radius: 3
   pauseScene: {fileID: 2145218265}
   pauseButton: {fileID: 2069392300}
   touchToStart: {fileID: 2103198458}

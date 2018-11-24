@@ -32,7 +32,8 @@ public class Note : MonoBehaviour {
 
 	};
 
-	private int[] radForHitNote = new int[2];
+	private int[] degForHitNote = new int[2];
+	private float rad;
 	private float center;
 	private float distance = 0;
 
@@ -41,8 +42,9 @@ public class Note : MonoBehaviour {
 		if (head) { // head of note
 			switch (this.kindOfNote) {
 				case 0: // hit-note
-					this.radForHitNote = this.dictionaryForHitNote[route];
-					this.center = this.radForHitNote[0] == 1 ? this.radius : -this.radius;
+					this.degForHitNote = this.dictionaryForHitNote[route];
+					this.rad = this.degForHitNote[1] * Mathf.Deg2Rad;
+					this.center = this.degForHitNote[0] == 1 ? this.radius : -this.radius;
 					break;
 				case 1: // long-note
 							
@@ -120,7 +122,7 @@ public class Note : MonoBehaviour {
 	}
 
 	void controlHitNote(){
-		this.transform.position = new Vector2(this.center + this.distance * Mathf.Cos(this.radForHitNote[1]), this.distance * Mathf.Sin(this.radForHitNote[1]));
+		this.transform.position = new Vector2(this.center + this.distance * Mathf.Cos(this.rad), this.distance * Mathf.Sin(this.rad));
 		this.distance = this.noteTime * speed;
 	}
 }

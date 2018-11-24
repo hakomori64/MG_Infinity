@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour {
 
@@ -139,6 +140,10 @@ public class SceneController : MonoBehaviour {
 		// Debug.Log(si.hit_decision);
 		// Debug.Log(si.speed);
 		// Debug.Log(si.list[0].id);
+
+		
+		//GameObject image_object = GameObject.Find(String.Format("{0}",title));//画像のロード　正直わからん
+		//Image image_component = image_object.GetComponent<Image>();
 
 		musicSID = 0;
 		sceneDif = 0;

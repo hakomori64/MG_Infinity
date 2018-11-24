@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour {
 	private int id, difficulty; //used to load specified musical score.
 	private string composer, title; //used to load specified musical score.
 	private float speed, hit_decision;
-	private int numberOfInstantiatedNotes = 0;
+	public int numberOfInstantiatedNotes = 0;
 	private Phase phase; //used to express the progress status.
 	ChartDataBody chart = new ChartDataBody();
 	public float radius; //radius of the two circles.
@@ -162,8 +162,9 @@ public class GameController : MonoBehaviour {
 
 		for (int i = 0; i < scanningRange; i++) {
 			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time &&
-			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time) {
-				generatedNoteControllers[i].SetActive(true);
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time) 
+			{
+				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
 				processedNotesCount++;
 			}
 		}

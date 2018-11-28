@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class SceneController : MonoBehaviour {
 
 	songsInformation si = new songsInformation();
+	//GameObject thumbnail = new GameObject("Thumbnail");
 
 	[System.Serializable]
 	public class songsInformation {
@@ -27,11 +28,11 @@ public class SceneController : MonoBehaviour {
 	}
 
 	//他シーンに渡す変数
-	public static int musicID;
-	public static int difficulty;
-	public static string composer;
-	public static string title;
-	public static float speed, hit_decision;
+	private static int musicID;
+	private static int difficulty;
+	private static string composer;
+	private static string title;
+	private static float speed, hit_decision;
 
 	//このシーン内で使う変数
 	private static int sceneDif; //scene内の難易度を扱う変数　easy:0,medium:1,hard:2,infinity:3
@@ -42,7 +43,44 @@ public class SceneController : MonoBehaviour {
 	private static int[] listPath;
 
 
-	//他シーンで変数を読み込むとき用関数
+	// Use this for initialization
+	void Start () {
+
+		string json = Resources.Load("all_preference").ToString();
+
+		JsonUtility.FromJsonOverwrite(json, si);
+
+		musicSID = 0;
+		sceneDif = 0;
+
+		sortMode = 0;
+		path = 0;
+
+		/* insert values in each variable to allow other variables to refer to them */
+		/* スタート段階でselectedMusic, sceneDifの値は決まらないからこれはテストとして使う */
+		
+
+		//他に必要な処理
+	}
+
+	// Update is called once per frame
+	void Update () {
+		//title:ugokuugoku
+		//どうせここ画面遷移するまで曲を流すだけだと思うんだ。
+	}
+	
+
+	public void selectMusic(int n, int dif){
+		//00001
+		musicID = si.list[n].id;
+		difficulty = si.list[n].difficulty[dif];
+		composer = si.list[n].composer;
+		title = si.list[n].title;
+		speed = si.speed;
+		hit_decision = si.hit_decision;
+	}
+
+		//他シーンで変数を読み込むとき用関数
 	public static int getID(){
 		return musicID;
 	}
@@ -128,64 +166,5 @@ public class SceneController : MonoBehaviour {
 
 	public int difficultNum(){
 		return sceneDif;
-	}
-
-	// Use this for initialization
-	void Start () {
-
-		string json = Resources.Load("all_preference").ToString();
-
-		JsonUtility.FromJsonOverwrite(json, si);
-
-		// Debug.Log(si.hit_decision);
-		// Debug.Log(si.speed);
-		// Debug.Log(si.list[0].id);
-
-		
-		//GameObject image_object = GameObject.Find(String.Format("{0}",title));//画像のロード　正直わからん
-		//Image image_component = image_object.GetComponent<Image>();
-
-		musicSID = 0;
-		sceneDif = 0;
-
-		sortMode = 0;
-		path = 0;
-
-		/* insert values in each variable to allow other variables to refer to them */
-		/* スタート段階でselectedMusic, sceneDifの値は決まらないからこれはテストとして使う */
-		
-
-		//他に必要な処理
-	}
-
-	// Update is called once per frame
-	void Update () {
-		switch (sortMode){
-			case 0:
-				musicSID = path;
-				break;
-			case 1:
-				musicSID = listPath[path];
-				break;//ここバグでる可能性ある。
-		}
-		selectMusic(musicSID, sceneDif);
-
-		//Debug.Log(string.Format("title:{0}",title));
-		//title:ugokuugoku
-		//必要な処理
-		/*
-		マカロン食べること。
-		*/
-	}
-	
-
-	public void selectMusic(int n, int dif){
-		//00001
-		musicID = si.list[n].id;
-		difficulty = si.list[n].difficulty[dif];
-		composer = si.list[n].composer;
-		title = si.list[n].title;
-		speed = si.speed;
-		hit_decision = si.hit_decision;
 	}
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Note : MonoBehaviour {
 
+	private GameObject lineObject;
+	private LineRenderer lineRenderer;
 	private string route;
 	private int id;
 	private double start, end;
@@ -11,7 +13,7 @@ public class Note : MonoBehaviour {
 	private float noteTime = 0;
 	private bool head;
 	private int kindOfNote;
-	private Dictionary<string, int[]> dictionaryForHitNote = new Dictionary<string, int[]>()
+	private Dictionary<string, int[]> dictionaryForHitandLongNote = new Dictionary<string, int[]>()
 	{
 		{"0", new int[2]{1, 180}},
 		{"1", new int[2]{1, 135}},
@@ -32,20 +34,32 @@ public class Note : MonoBehaviour {
 
 	};
 
-	private int[] radForHitNote = new int[2];
+	private int[] degForHitandLongNote = new int[2];
+	private float rad;
 	private float center;
-	private float distance = 0;
+	private float distanceOfHead = 0, distanceOfTail = 0;
 
 	// Use this for initialization
 	void Start () {
 		if (head) { // head of note
 			switch (this.kindOfNote) {
 				case 0: // hit-note
-					this.radForHitNote = this.dictionaryForHitNote[route];
-					this.center = this.radForHitNote[0] == 1 ? this.radius : -this.radius;
+					this.degForHitandLongNote = this.dictionaryForHitandLongNote[route];
+					this.rad = this.degForHitandLongNote[1] * Mathf.Deg2Rad;
+					this.center = this.degForHitandLongNote[0] == 1 ? this.radius : -this.radius;
 					break;
 				case 1: // long-note
-							
+					this.degForHitandLongNote = this.dictionaryForHitandLongNote[route];
+					this.rad = this.degForHitandLongNote[1] * Mathf.Deg2Rad;
+					this.center = this.degForHitandLongNote[0] == 1 ? this.radius : -this.radius;		
+
+					GameObject linePrefab = (GameObject)Resources.Load("prefabs/Line");
+					lineObject = Instantiate(linePrefab, transform.position, transform.rotation);
+					lineObject.transform.parent = transform;
+					lineRenderer = lineObject.GetComponent<LineRenderer>();
+					lineRenderer.startWidth = 0.3f;
+					lineRenderer.endWidth = 0.3f;
+					lineRenderer.positionCount = 2;
 					break;
 				case 2: // swipe-note
 				
@@ -58,7 +72,9 @@ public class Note : MonoBehaviour {
 		} else { // tail of note
 			switch (this.kindOfNote) {
 				case 1: // long-note
-					
+					this.degForHitandLongNote = this.dictionaryForHitandLongNote[route];
+					this.rad = this.degForHitandLongNote[1] * Mathf.Deg2Rad;
+					this.center = this.degForHitandLongNote[0] == 1 ? this.radius : -this.radius;
 					break;
 				case 2: // swipe-note
 					
@@ -69,6 +85,7 @@ public class Note : MonoBehaviour {
 			}
 		}
 
+		
 	}
 
 	// Update is called once per frame
@@ -83,6 +100,7 @@ public class Note : MonoBehaviour {
 				
 				case 1: // long-note
 					//add some function which controls head of long-note here!!
+					controlHeadOfLongNote();
 					break;
 				
 				case 2: // swipe-note
@@ -92,19 +110,19 @@ public class Note : MonoBehaviour {
 				default:
 					
 					break;
-				}
-			} else { // tail of note
-				switch (this.kindOfNote) {
-					case 1: // long-note
-						//add some function which controls head of long-note here!!
-						break;
-					case 2: // swipe-note
-						//add some function which controls head of swipe-note here!!
-						break;
-					default:
-						break;
-				}
 			}
+		} else { // tail of note
+			switch (this.kindOfNote) {
+				case 1: // long-note
+					//add some function which controls head of long-note here!!
+					controlTailOfLongNote();
+					break;
+				case 2: // swipe-note
+					//add some function which controls head of swipe-note here!!
+					break;
+				default:
+					break;				}
+		}
 		noteTime += Time.deltaTime;
 	}
 
@@ -120,7 +138,29 @@ public class Note : MonoBehaviour {
 	}
 
 	void controlHitNote(){
-		this.transform.position = new Vector2(this.center + this.distance * Mathf.Cos(this.radForHitNote[1]), this.distance * Mathf.Sin(this.radForHitNote[1]));
-		this.distance = this.noteTime * speed;
+		this.transform.position = new Vector2(this.center + this.distanceOfHead * Mathf.Cos(this.rad), this.distanceOfHead * Mathf.Sin(this.rad));
+		this.distanceOfHead = this.noteTime * speed;
+	}
+
+	void controlHeadOfLongNote(){
+		if (noteTime <= radius / speed) {
+			controlHitNote();
+		} else {
+			this.transform.position = new Vector2(this.center + this.radius * Mathf.Cos(this.rad), this.radius * Mathf.Sin(this.rad));
+		}
+
+		if (noteTime >= end - start &&
+			noteTime <= radius / speed + (end - start)) 
+		{
+			this.distanceOfTail = speed * (noteTime - ((float)end - (float)start));
+		}
+
+		lineRenderer.SetPosition(0, this.transform.position);
+		lineRenderer.SetPosition(1, new Vector2(this.center + this.distanceOfTail * Mathf.Cos(this.rad), this.distanceOfTail * Mathf.Sin(this.rad)));
+	}
+
+	void controlTailOfLongNote(){
+		this.transform.position = new Vector2(this.center + this.distanceOfTail * Mathf.Cos(this.rad), this.distanceOfTail * Mathf.Sin(this.rad));
+		this.distanceOfTail = speed * noteTime;
 	}
 }

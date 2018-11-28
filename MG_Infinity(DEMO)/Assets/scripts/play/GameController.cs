@@ -138,8 +138,32 @@ public class GameController : MonoBehaviour {
 			time += Time.deltaTime;
 		}
 
+		int processedNotesCount = 0;
+		float gap = radius/speed; // time between InstantiatedNotes and Touched time
+		//Debug.Log("notes speed is:" + speed);
+		//Debug.Log("number of notes:" + chart.notesTime.Length);
+
+		int scanningRange;
+		if (chart.notesTime.Length - numberOfInstantiatedNotes >= 10) {
+			scanningRange = 10;
+		} else {
+			scanningRange = chart.notesTime.Length - numberOfInstantiatedNotes;
+		}
+
+		for (int i = 0; i < scanningRange; i++) {
+			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time - chart.offset &&
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) 
+			{
+				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
+				processedNotesCount++;
+			}
+		}
+
+		numberOfInstantiatedNotes += processedNotesCount;
+
+
 		if (time > chart.offset) {
-			time = 0;
+			//time = 0;
 			pauseButton.SetActive(true);
 			phase = Phase.playing;
 			audioSource.Play();
@@ -161,8 +185,8 @@ public class GameController : MonoBehaviour {
 		}
 
 		for (int i = 0; i < scanningRange; i++) {
-			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time &&
-			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time) 
+			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time - chart.offset &&
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) 
 			{
 				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
 				processedNotesCount++;
@@ -212,7 +236,7 @@ public class GameController : MonoBehaviour {
 			id = 1;
 			composer = "2bnsn";
 			title = "ugokuugoku";
-			speed = 5;
+			speed = 1;
 			hit_decision = 0.1f;
 		} else {
 

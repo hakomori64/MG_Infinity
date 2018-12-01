@@ -5,7 +5,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class SceneController : MonoBehaviour {
+	public Image thumbnail;
+	public GameObject easyButton;
+	public GameObject mediumButton;
+	public GameObject hardButton;
+	public GameObject infinityButton;
+	public GameObject playButton;
+	public GameObject backButton;
+	public GameObject optionButton;
 
 	songsInformation si = new songsInformation();
 	//GameObject thumbnail = new GameObject("Thumbnail");
@@ -35,13 +44,14 @@ public class SceneController : MonoBehaviour {
 	private static float speed, hit_decision;
 
 	//このシーン内で使う変数
+	private static string thumbnailName = "ugokuugoku";
 	private static int sceneDif; //scene内の難易度を扱う変数　easy:0,medium:1,hard:2,infinity:3
 	private static int sortMode;
 	 //sortした時のモード選択　sortのモードいくつあったっけ？（それぞれ割り当てるのじゃ）
 	private static int musicSID;
 	private static int path;
 	private static int[] listPath;
-
+	private static string[] titleList;
 
 	// Use this for initialization
 	void Start () {
@@ -58,7 +68,8 @@ public class SceneController : MonoBehaviour {
 
 		/* insert values in each variable to allow other variables to refer to them */
 		/* スタート段階でselectedMusic, sceneDifの値は決まらないからこれはテストとして使う */
-		
+
+		loadThumbnail();
 
 		//他に必要な処理
 	}
@@ -112,6 +123,10 @@ public class SceneController : MonoBehaviour {
 		SceneManager.LoadScene("play");
 	}
 
+	public void moveOption(){
+		SceneManager.LoadScene("option");
+	}
+
 	//一つ上の曲
 	public void upMusic(){
 		path = path - 1;
@@ -120,6 +135,11 @@ public class SceneController : MonoBehaviour {
 	//一つ下の曲
 	public void downMusic(){
 		path = path + 1;
+	}
+
+	//thumbnail読み込み
+	public void loadThumbnail(){
+		thumbnail.sprite = Resources.Load<Sprite>("images/"+thumbnailName);
 	}
 
 	//easyボタン
@@ -144,14 +164,14 @@ public class SceneController : MonoBehaviour {
 	}
 	//sortボタン
 	public void musicNameSort(){
-		string[] name = new string[si.list.Length];
+		titleList = new string[si.list.Length];
 		listPath = new int[si.list.Length];
 		for(int i = 0; i < si.list.Length; i++){
-			name[i] = si.list[i].title;
+			titleList[i] = si.list[i].title;
 		}
-		Array.Sort(name);
+		Array.Sort(titleList);
 		for(int i = 0; i < si.list.Length; i++){
-			listPath[i] = Array.IndexOf(si.list,name[i]);
+			listPath[i] = Array.IndexOf(si.list,titleList[i]);
 		}
 		sortMode = 1;
 		//nameに順番にtitle入れてソート

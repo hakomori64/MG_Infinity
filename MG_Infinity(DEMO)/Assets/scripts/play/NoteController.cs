@@ -33,6 +33,7 @@ public class NoteController : MonoBehaviour {
 	void Update () {
 		if (time == 0) {
 			notes[0].SetActive(true);
+			notes[1].SetActive(false);
 		}
 
 		if (this.kindOfNote != KindsOfNote.HitNotes) {

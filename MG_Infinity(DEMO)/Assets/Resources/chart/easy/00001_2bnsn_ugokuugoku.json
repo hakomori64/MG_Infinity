@@ -2,10 +2,10 @@
     "version": "1#1.0.1",
     "difficulty": [0, 1],
     "notesTime": [
-        [5.0, 7.0]
+        [3.0, 20.0]
     ],
     "route": [
-        "1"
+        "FEDCBA98F76543210"
     ],
     "bpm": 60,
     "setbpm": [

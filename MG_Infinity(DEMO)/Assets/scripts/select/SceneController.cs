@@ -15,9 +15,14 @@ public class SceneController : MonoBehaviour {
 	public GameObject playButton;
 	public GameObject backButton;
 	public GameObject optionButton;
+	public GameObject centerButton;
+	public GameObject oneUpButton;
+	public GameObject twoUpButton;
+	public GameObject threeUpButton;
+	public GameObject oneDownButton;
+	public GameObject twoDownButton;
 
 	songsInformation si = new songsInformation();
-	//GameObject thumbnail = new GameObject("Thumbnail");
 
 	[System.Serializable]
 	public class songsInformation {
@@ -38,18 +43,17 @@ public class SceneController : MonoBehaviour {
 
 	//他シーンに渡す変数
 	private static int musicID;
-	private static int difficulty;
+	private static int stars;
 	private static string composer;
 	private static string title;
 	private static float speed, hit_decision;
+	private static int sceneDif=0; //scene内の難易度を扱う変数　easy:0,medium:1,hard:2,infinity:3 scene内じゃなくて全体になりました。
 
 	//このシーン内で使う変数
-	private static string thumbnailName = "ugokuugoku";
-	private static int sceneDif; //scene内の難易度を扱う変数　easy:0,medium:1,hard:2,infinity:3
-	private static int sortMode;
-	 //sortした時のモード選択　sortのモードいくつあったっけ？（それぞれ割り当てるのじゃ）
-	private static int musicSID;
-	private static int path;
+	private static string thumbnailName;
+	private static int sortMode=0;
+	//sortした時のモード選択　sortのモードいくつあったっけ？（それぞれ割り当てるのじゃ）
+	private static int path=0;
 	private static int[] listPath;
 	private static string[] titleList;
 
@@ -60,16 +64,16 @@ public class SceneController : MonoBehaviour {
 
 		JsonUtility.FromJsonOverwrite(json, si);
 
-		musicSID = 0;
-		sceneDif = 0;
+		selectMusic(path,sceneDif);
 
-		sortMode = 0;
-		path = 0;
+		thumbnailName = si.list[path].title;
 
 		/* insert values in each variable to allow other variables to refer to them */
 		/* スタート段階でselectedMusic, sceneDifの値は決まらないからこれはテストとして使う */
 
-		loadThumbnail();
+		loadThumbnail(thumbnailName);
+
+		displayTitle();
 
 		//他に必要な処理
 	}
@@ -84,11 +88,21 @@ public class SceneController : MonoBehaviour {
 	public void selectMusic(int n, int dif){
 		//00001
 		musicID = si.list[n].id;
-		difficulty = si.list[n].difficulty[dif];
+		stars = si.list[n].difficulty[dif];
 		composer = si.list[n].composer;
 		title = si.list[n].title;
 		speed = si.speed;
 		hit_decision = si.hit_decision;
+		Debug.Log("ID"+musicID);
+		Debug.Log("stars"+stars);
+		Debug.Log("composer"+composer);
+		Debug.Log("title"+title);
+		Debug.Log("speed"+speed);
+		Debug.Log("hitDecision"+hit_decision);
+	}
+
+	public void displayTitle(){
+		this.centerButton.GetComponentInChildren<Text>().text = title;
 	}
 
 		//他シーンで変数を読み込むとき用関数
@@ -96,7 +110,10 @@ public class SceneController : MonoBehaviour {
 		return musicID;
 	}
 	public static int getDifficulty(){
-		return difficulty;
+		return sceneDif;
+	}
+	public static int getSters(){
+		return stars;
 	}
 	public static string getComposer(){
 		return composer;
@@ -129,37 +146,49 @@ public class SceneController : MonoBehaviour {
 
 	//一つ上の曲
 	public void upMusic(){
-		path = path - 1;
+		path = (si.list.Length + path - 1)%si.list.Length;
+		Debug.Log(path);
+		selectMusic(path,sceneDif);
+		loadThumbnail(title);
+		displayTitle();
 	}
 
 	//一つ下の曲
 	public void downMusic(){
-		path = path + 1;
+		path = (si.list.Length+path + 1)%si.list.Length;
+		Debug.Log(path);
+		selectMusic(path,sceneDif);
+		loadThumbnail(title);
+		displayTitle();
 	}
 
 	//thumbnail読み込み
-	public void loadThumbnail(){
-		thumbnail.sprite = Resources.Load<Sprite>("images/"+thumbnailName);
+	public void loadThumbnail(string thumbnailName){
+		this.thumbnail.sprite = Resources.Load<Sprite>("images/"+thumbnailName);
 	}
 
 	//easyボタン
 	public void chengeToEasy(){
 		sceneDif = 0;
+		selectMusic(path,sceneDif);
 		Debug.Log(sceneDif);
 	}
 	//mediumボタン
 	public void chengeToMedium(){
 		sceneDif = 1;
+		selectMusic(path,sceneDif);
 		Debug.Log(sceneDif);
 	}
 	//hardボタン
 	public void chengeToHard(){
 		sceneDif = 2;
+		selectMusic(path,sceneDif);
 		Debug.Log(sceneDif);
 	}
 	//infinityボタン
 	public void changeToInfinity(){
 		sceneDif = 3;
+		selectMusic(path,sceneDif);
 		Debug.Log(sceneDif);
 	}
 	//sortボタン
@@ -182,9 +211,5 @@ public class SceneController : MonoBehaviour {
 		/*
 		sortする。以上
 		*/
-	}
-
-	public int difficultNum(){
-		return sceneDif;
 	}
 }

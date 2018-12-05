@@ -178,7 +178,7 @@ public class GameController : MonoBehaviour {
 		//Debug.Log("number of notes:" + chart.notesTime.Length);
 
 		int scanningRange;
-		if (chart.notesTime.Length - numberOfInstantiatedNotes >= 10) {
+		if (this.chart.notesTime.Length - this.numberOfInstantiatedNotes >= 10) {
 			scanningRange = 10;
 		} else {
 			scanningRange = chart.notesTime.Length - numberOfInstantiatedNotes;

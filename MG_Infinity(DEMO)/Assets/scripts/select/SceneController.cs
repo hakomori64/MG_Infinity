@@ -15,6 +15,7 @@ public class SceneController : MonoBehaviour {
 	public GameObject playButton;
 	public GameObject backButton;
 	public GameObject optionButton;
+	public GameObject sortButton;
 	public GameObject centerButton;
 	public GameObject oneUpButton;
 	public GameObject twoUpButton;
@@ -75,6 +76,8 @@ public class SceneController : MonoBehaviour {
 
 		displayTitle();
 
+		displaySortMode(sortMode);
+
 		//他に必要な処理
 	}
 
@@ -103,6 +106,11 @@ public class SceneController : MonoBehaviour {
 
 	public void displayTitle(){
 		this.centerButton.GetComponentInChildren<Text>().text = title;
+		this.threeUpButton.GetComponentInChildren<Text>().text = si.list[(si.list.Length+path-3)%si.list.Length].title;
+		this.twoUpButton.GetComponentInChildren<Text>().text = si.list[(si.list.Length+path-2)%si.list.Length].title;
+		this.oneUpButton.GetComponentInChildren<Text>().text = si.list[(si.list.Length+path-1)%si.list.Length].title;
+		this.oneDownButton.GetComponentInChildren<Text>().text = si.list[(si.list.Length+path+1)%si.list.Length].title;
+		this.twoDownButton.GetComponentInChildren<Text>().text = si.list[(si.list.Length+path+2)%si.list.Length].title;
 	}
 
 		//他シーンで変数を読み込むとき用関数
@@ -191,7 +199,7 @@ public class SceneController : MonoBehaviour {
 		selectMusic(path,sceneDif);
 		Debug.Log(sceneDif);
 	}
-	//sortボタン
+	//NEET系sortボタン~NEATを目指して~
 	public void musicNameSort(){
 		titleList = new string[si.list.Length];
 		listPath = new int[si.list.Length];
@@ -206,10 +214,22 @@ public class SceneController : MonoBehaviour {
 		//nameに順番にtitle入れてソート
 		//nameの文字列をsi.listで検索して、index順番にlistPathにぶち込む（これでlistPathを参照すれば元のindexがわかる...はず）
 		//ちなみに、同じ名前があったら死ぬ。
-
+		displaySortMode(sortMode);
 		//必要な処理
 		/*
 		sortする。以上
 		*/
+	}
+	public void displaySortMode(int sortMode){
+		string sortText = "";
+		switch(sortMode){
+			case 0:
+				sortText = "ID";
+				break;
+			case 1:
+				sortText = "Title";
+				break;
+		}
+		this.sortButton.GetComponentInChildren<Text>().text = "Sorted by"+sortText;
 	}
 }

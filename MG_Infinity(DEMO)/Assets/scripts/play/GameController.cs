@@ -238,7 +238,7 @@ public class GameController : MonoBehaviour {
 			title = "ugokuugoku";
 			speed = 1;
 			hit_decision = 0.1f;
-		} else {
+		} else { 
 
 			difficulty = SceneController.getDifficulty();
 			id = SceneController.getID();

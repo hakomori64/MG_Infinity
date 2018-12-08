@@ -2,20 +2,33 @@
 	"hit_decision": 0.1,
 	"speed": 5.0,
 	"list": [
-	{
-		"id": 1,
-		"composer": "2bnsn",
-        "title": "ugokuugoku",
-        "play_count": 0,
-		"difficulty": [1,1,1,1]
-    },
-    {
-		"id": 43382,
-		"composer": "山田孝之",
-        "title": "びろーん",
-        "play_count": 88,
-		"difficulty": [1,2,3,4]
-    }
-
-]
+		{
+			"id": 1,
+			"composer": "2bnsn",
+			"title": "ugokuugoku",
+			"play_count": 0,
+			"difficulty": [1,1,1,1]
+		},
+		{
+			"id": 39,
+			"composer": "みきとP",
+			"title": "39みゅーじっく！",
+			"play_count": 1,
+			"difficulty": [2,3,6,6]
+		},
+		{
+			"id": 3910,
+			"composer": "ハチ",
+			"title": "砂の惑星",
+			"play_count": 1,
+			"difficulty": [2,4,3,6]
+		},
+		{
+			"id": 43382,
+			"composer": "山田孝之",
+			"title": "びろーん",
+			"play_count": 88,
+			"difficulty": [1,2,3,4]
+		}
+	]
 }

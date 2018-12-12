@@ -40,10 +40,11 @@ public class Note : MonoBehaviour
     private int degForSwipeNoteFormer;
     private int degForSwipeNoteLatter;
     private int startIndexOfSwipeNote = 0;
-    private float rad;
-    private float center;
-    private float distanceOfHead = 0, distanceOfTail = 0;
+    public float rad;
+    public float center;
+    public float distanceOfHead = 0, distanceOfTail = 0;
     private int routeLength;
+    private Note parentNote;
 
     // Use this for initialization
     void Start()
@@ -81,13 +82,11 @@ public class Note : MonoBehaviour
                     lineRenderer.startWidth = 0.3f;
                     lineRenderer.endWidth = 0.3f;
                     lineRenderer.positionCount = 2;
+                    this.distanceOfTail = radius;
                     break;
-
                 default:
-
                     break;
             }
-
         }
         else
         { // tail of note
@@ -99,7 +98,9 @@ public class Note : MonoBehaviour
                     this.center = this.degForHitandLongNote[0] == 1 ? this.radius : -this.radius;
                     break;
                 case 2: // swipe-note
-
+                    this.parentNote = this.transform.parent.GetComponent<Note>();
+                    this.rad = this.parentNote.rad + Mathf.PI;
+                    this.distanceOfTail = radius;
                     break;
                 default:
 
@@ -292,13 +293,14 @@ public class Note : MonoBehaviour
         if (noteTime > end - start && noteTime <= radius / speed + (end - start))
         {
             this.distanceOfTail = (float)(this.radius - speed * (noteTime - (end - start)));
+            lineRenderer.SetPosition(0, this.transform.position);
+            lineRenderer.SetPosition(1, new Vector2(this.transform.position.x + this.distanceOfTail * Mathf.Cos(rad + Mathf.PI), this.transform.position.y + this.distanceOfTail * Mathf.Sin(rad + Mathf.PI)));
+        } else {
+            lineRenderer.SetPosition(0, this.transform.position);
+            lineRenderer.SetPosition(1, new Vector2(center, 0));
         }
 
-        lineRenderer.SetPosition(0, this.transform.position);
-        lineRenderer.SetPosition(1, new Vector2(this.center + this.distanceOfTail * Mathf.Cos(this.rad), this.distanceOfTail * Mathf.Sin(this.rad)));
-
-        lineRenderer.SetPosition(0, this.transform.position);
-        lineRenderer.SetPosition(1, new Vector2(this.center, 0));
+        
     }
 
     void controlTailOfSwipeNote()
@@ -315,7 +317,12 @@ public class Note : MonoBehaviour
         // radius / velocity
 
         //this.transform.localposition = new Vector2(distanceOfTail * cos((rad + pi)), distanceOfTail * sin(rad + pi))
-        // 
+        //
+        this.rad = this.parentNote.rad + Mathf.PI;
+        this.distanceOfTail = radius - noteTime * speed;
+
+        this.transform.position = new Vector2(this.transform.parent.transform.position.x + this.distanceOfTail * Mathf.Cos(this.rad), this.transform.parent.transform.position.y + this.distanceOfTail * Mathf.Sin(this.rad));
+
     }
 
     void translateNote(float startDeg, float endDeg)

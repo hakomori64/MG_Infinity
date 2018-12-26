@@ -42,6 +42,14 @@ public class SceneController : MonoBehaviour {
 		public int[] difficulty;
 	}
 
+	[System.Serializable]
+	public class MusicDateList
+	{
+		public string[] musicTitleList;
+		public string[] composerList;
+		public int[] play_countList;
+	}
+
 	//他シーンに渡す変数
 	private static int musicID;
 	private static int stars;
@@ -54,6 +62,7 @@ public class SceneController : MonoBehaviour {
 	private static string thumbnailName;
 	private static int sortMode=0;
 	//sortした時のモード選択　sortのモードいくつあったっけ？（それぞれ割り当てるのじゃ）
+	private static int sortModeSum = 2;
 	private static int path=0;
 	private int[] listPath;
 	private string[] titleList;
@@ -215,23 +224,31 @@ public class SceneController : MonoBehaviour {
 		Debug.Log(sceneDif);
 	}
 	//NEET系sortボタン~NEATを目指して~
+	public void sortMusic(){
+		sortMode = (sortMode+1)%sortModeSum;
+		setListPath(sortMode);
+	}
 	public void musicIDSort(){
 		for(int i = 0; i < si.list.Length; i++){
 			listPath[i] = i;
+			Debug.Log("ID"+listPath[i]);
 		}
+		Debug.Log("IDのパス一覧"+listPath[0]);
+		displaySortMode(sortMode);
 	}
 	public void musicNameSort(){
 		for(int i = 0; i < si.list.Length; i++){
 			titleList[i] = si.list[i].title;
 		}
+		Debug.Log("titleリスト"+titleList[0]+" "+titleList[1]+" "+titleList[2]+" "+titleList[3]);
 		Array.Sort(titleList);
-		for(int i = 0; i < si.list.Length; i++){
-			listPath[i] = Array.IndexOf(si.list,titleList[i]);
-		}
+		Debug.Log("sorted"+titleList[0]+" "+titleList[1]+" "+titleList[2]+" "+titleList[3]);//ちゃんと動いた
+		/*for(int i = 0; i < si.list.Length; i++){ここで名前検索してidをlistPathに入れる
+		}*/
 		sortMode = 1;
 		//nameに順番にtitle入れてソート
 		//nameの文字列をsi.listで検索して、index順番にlistPathにぶち込む（これでlistPathを参照すれば元のindexがわかる...はず）
-		//ちなみに、同じ名前があったら死ぬ。←なくても死んだ。
+		//ちなみに、同じ名前があったら死ぬ。←なくても死んだ。←まずIndexOf関数の使い方を間違えてただけだった
 		displaySortMode(sortMode);
 		//必要な処理
 		/*

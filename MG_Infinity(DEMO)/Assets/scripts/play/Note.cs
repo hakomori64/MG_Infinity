@@ -45,6 +45,7 @@ public class Note : MonoBehaviour
     public float distanceOfHead = 0, distanceOfTail = 0;
     private int routeLength;
     private Note parentNote;
+    private bool touchSuccessful = true;
 
     // Use this for initialization
     void Start()
@@ -114,6 +115,7 @@ public class Note : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (head)
         { // head of note
             switch (this.kindOfNote)
@@ -305,19 +307,6 @@ public class Note : MonoBehaviour
 
     void controlTailOfSwipeNote()
     {
-        // スワイプノーツがどちゃくそながかったとき，distanceOfTailはhogehogeタイムまで定数になっちゃうよ〜〜〜
-        // hogehogeタイムを求める
-        //  先頭ノーツの時計:end - start　+ this.noteTime
-        //  これが基本パターンになるはず，
-        /*if (this.noteTime < radius / velocity){
-            this.distanceOfTail = radius;
-        } else {
-            this.distanceOfTail = radius - this.noteTime * speed;
-        }*/
-        // radius / velocity
-
-        //this.transform.localposition = new Vector2(distanceOfTail * cos((rad + pi)), distanceOfTail * sin(rad + pi))
-        //
         this.rad = this.parentNote.rad + Mathf.PI;
         this.distanceOfTail = radius - noteTime * speed;
 
@@ -340,5 +329,66 @@ public class Note : MonoBehaviour
 		rad = (float)currentAngle * Mathf.Deg2Rad;
         this.transform.position = new Vector2(this.center + this.radius * Mathf.Cos(this.rad), this.radius * Mathf.Sin(this.rad));
 
+    }
+
+    void detectTouch() {
+        if (onTouch()) {
+            switch (this.kindOfNote) {
+                case 0:
+                    //早くタッチした場合はこれでいける。遅くタッチした場合、これじゃダメ。なぜなら、(end - start)秒後にノートのSetActiveはfalseになりスクリプトは実行されないから。
+                    if (Mathf.Abs((float)noteTime - radius / speed) > 0.080) {
+                        // score 0
+                        return;
+                    } else if (Mathf.Abs((float)noteTime - radius / speed) > 0.050) {
+                        //score 100000 / (number of note) * 0.4
+                        //change color  
+                    } else if (Mathf.Abs((float)noteTime - radius / speed) > 0.028) {
+                        //score 100000 / (number of note) * 0.7
+                        //change color
+                    } else {
+                        //score 100000 / (number of note)
+                        //change color
+                    }
+                    break;
+                case 1:
+                    if (this.touchSuccessful == false) return;
+
+                    if (Mathf.Abs((float)noteTime - radius / speed) > 0.080) {
+                        this.touchSuccessful = false;
+                    }
+                    break;
+            }
+        }
+    }
+
+    bool onTouch() {
+        if (Application.isEditor) {
+            if (Input.GetMouseButtonDown(0)) {
+                return true;
+            }
+
+            if (Input.GetMouseButton(0)) {
+                return true;
+            }
+        } else {
+            if (Input.touchCount > 0) {
+                for (int i = 0; i < Input.touchCount; i++) {
+                    Touch t = Input.GetTouch(i);
+
+                    if(t.phase == TouchPhase.Began) {
+                        Ray ray = Camera.main.ScreenPointToRay(t.position);
+                        RaycastHit hit;
+
+                        if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
+                            if (hit.collider.gameObject == this.gameObject) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

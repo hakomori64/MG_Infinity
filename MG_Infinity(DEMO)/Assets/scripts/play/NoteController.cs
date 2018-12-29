@@ -22,6 +22,7 @@ public class NoteController : MonoBehaviour {
 	public GameObject notePrefab;
 	private GameObject[] notes;
 
+	public bool isTouched;
 
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
@@ -90,4 +91,44 @@ public class NoteController : MonoBehaviour {
 
 		}
 	}
+
+  void detectTouch() {
+	    switch (this.kindOfNote) {
+				/*
+				public class Score	{
+					public int missed;
+					public int good;
+					public int great;
+					public int perfect;}
+				*/
+	        case 0:
+	            //早くタッチした場合はこれでいける。遅くタッチした場合、これじゃダメ。
+	            //なぜなら、(end - start)秒後にノートのSetActiveはfalseになりスクリプトは実行されないから。
+	            if (Mathf.Abs(time - radius / speed) > 0.080) {
+	                // score.missed++;
+	                return;
+	            } else if (Mathf.Abs(time - radius / speed) > 0.050) {
+	                //score 100000 / (number of note) * 0.4
+	                //change color
+									//score.good++;
+	            } else if (Mathf.Abs(time - radius / speed) > 0.028) {
+	                //score 100000 / (number of note) * 0.7
+	                //change color
+									//score.great++;
+	            } else {
+	                //score 100000 / (number of note)
+	                //change color
+									//score.perfect++;
+	            }
+	            break;
+	        case 1:
+
+
+	            if (this.touchSuccessful == false) return;
+
+	            if (Mathf.Abs(time - radius / speed) > 0.080) {
+	                this.touchSuccessful = false;
+	            }
+	            break;
+  }
 }

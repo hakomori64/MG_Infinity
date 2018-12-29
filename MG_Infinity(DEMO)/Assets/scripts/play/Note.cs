@@ -115,9 +115,10 @@ public class Note : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         if (head)
         { // head of note
+            this.transform.parent.getComponent<NoteController>().isTouched = onTouch();
             switch (this.kindOfNote)
             {
 
@@ -280,7 +281,7 @@ public class Note : MonoBehaviour
                 //this.degForSwipeNoteLatter = this.dictionaryForHitandLongNote[routePresent[1].ToString()][1]; //e.g. 0
 				translateNote(this.dictionaryForHitandLongNote[routePresent[0].ToString()][1], this.dictionaryForHitandLongNote[routePresent[1].ToString()][1]);
             }
-			
+
 
             //Debug.Log("currentAngle: " + currentAngle);
             //Debug.Log("center: " + center);
@@ -302,7 +303,7 @@ public class Note : MonoBehaviour
             lineRenderer.SetPosition(1, new Vector2(center, 0));
         }
 
-        
+
     }
 
     void controlTailOfSwipeNote()
@@ -331,35 +332,6 @@ public class Note : MonoBehaviour
 
     }
 
-    void detectTouch() {
-        if (onTouch()) {
-            switch (this.kindOfNote) {
-                case 0:
-                    //早くタッチした場合はこれでいける。遅くタッチした場合、これじゃダメ。なぜなら、(end - start)秒後にノートのSetActiveはfalseになりスクリプトは実行されないから。
-                    if (Mathf.Abs((float)noteTime - radius / speed) > 0.080) {
-                        // score 0
-                        return;
-                    } else if (Mathf.Abs((float)noteTime - radius / speed) > 0.050) {
-                        //score 100000 / (number of note) * 0.4
-                        //change color  
-                    } else if (Mathf.Abs((float)noteTime - radius / speed) > 0.028) {
-                        //score 100000 / (number of note) * 0.7
-                        //change color
-                    } else {
-                        //score 100000 / (number of note)
-                        //change color
-                    }
-                    break;
-                case 1:
-                    if (this.touchSuccessful == false) return;
-
-                    if (Mathf.Abs((float)noteTime - radius / speed) > 0.080) {
-                        this.touchSuccessful = false;
-                    }
-                    break;
-            }
-        }
-    }
 
     bool onTouch() {
         if (Application.isEditor) {

@@ -23,6 +23,7 @@ public class NoteController : MonoBehaviour {
 	private GameObject[] notes;
 
 	public bool isTouched;
+	private bool touchSuccessful = true;
 
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");

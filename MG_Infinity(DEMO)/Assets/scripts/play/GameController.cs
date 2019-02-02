@@ -9,8 +9,8 @@ public class GameController : MonoBehaviour {
 	public class ScoreCount {
 		public int bad = 0, good = 0, great = 0, perfect = 0;
 	}
-	private static ScoreCount scoreCount = ScoreCount();
-	private static float scoreValue;
+	public static ScoreCount scoreCount;
+	public static float scoreValue;
 	private float time = 0f; //used to measure the time.
 	private int id, difficulty; //used to load specified musical score.
 	private string composer, title; //used to load specified musical score.
@@ -33,9 +33,9 @@ public class GameController : MonoBehaviour {
 	private List<GameObject> generatedNoteControllers;
 
 	private int ceilingScore = 100000;
-	private static int scorePerOneNote;
-	private static int baseScore;
-	private static int total; // sum of virtual hit notes
+	public static int scorePerOneNote;
+	public static int baseScore;
+	public static int total; // sum of virtual hit notes
 	enum Phase {
 		beforeTouchToStart,
 		afterTouchToStart,
@@ -57,6 +57,8 @@ public class GameController : MonoBehaviour {
 
 
 	void Start () {
+		initStaticVariables();
+
 		// init chart
 		initChart();
 
@@ -71,7 +73,6 @@ public class GameController : MonoBehaviour {
 
 		// init noteControllers
 		initNoteControllers();
-
 		pauseScene.SetActive(false);
 		pauseButton.SetActive(false);
 		timerController.SetActive(false);
@@ -135,8 +136,7 @@ public class GameController : MonoBehaviour {
 
 		for (int i = 0; i < scanningRange; i++) {
 			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time - chart.offset &&
-			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) 
-			{
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) {
 				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
 				processedNotesCount++;
 			}
@@ -270,8 +270,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	void initScoreLabel() {
-		scoreValue = 0;
-		scoreLabel.text = scoreValue.ToString("D6");
+		GameController.scoreValue = 0;
+		scoreLabel.text = ((int)(GameController.scoreValue)).ToString("D6");
 	}
 
 	void initNoteControllers() {
@@ -281,38 +281,47 @@ public class GameController : MonoBehaviour {
 			GameObject _noteController = Instantiate(noteController, transform.position, transform.rotation) as GameObject;
 			_noteController.SetActive(false);
 			NoteController noteControllerComponent = _noteController.GetComponent<NoteController>();
-			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, this.scorePerOneNote);
+			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, GameController.scorePerOneNote);
 			generatedNoteControllers.Add(_noteController);
 		}
 	}
 
 	void calculatePointOfANote() {
-		for (int i = 0; i < chart.route; i++) {
+		for (int i = 0; i < chart.route.Length; i++) {
 			total += chart.route[i].Length;
 		}
 
-		Debug.Log(this.total);
-		this.scorePerOneNote = (int)(this.ceilingScore / this.total);
-		this.baseScore = this.ceilingScore - this.scorePerOneNote * this.total;
+		Debug.Log(GameController.total);
+		GameController.scorePerOneNote = (int)(this.ceilingScore / GameController.total);
+		GameController.baseScore = this.ceilingScore - GameController.scorePerOneNote * GameController.total;
 	}
 
 	public static int getScorePerOneNote() {
-		return this.getScorePerOneNote;
+		return scorePerOneNote;
 	}
 
 	public static int getBaseScore() {
-		return this.baseScore;
+		return baseScore;
 	}
 
 	public static float getScoreValue() {
-		return this.scoreValue;
+		return scoreValue;
 	}
 
 	public static ScoreCount GetScoreCount() {
-		return this.scoreCount;
+		return scoreCount;
 	}
 
 	public static int getTotal() {
-		return this.total;
+		return total;
 	}
+
+	void initStaticVariables() {
+		GameController.scorePerOneNote = 0;
+		GameController.total = 0;
+		GameController.scoreCount = new ScoreCount();
+		GameController.baseScore = 0;
+		GameController.scoreValue = 0;
+	}
+
 }

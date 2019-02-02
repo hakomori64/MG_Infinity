@@ -27,11 +27,11 @@ public class NoteController : MonoBehaviour {
 	private bool touchSuccessful = true;
 	private double ttl = 0.001;
 	private double goodBoundary = 0.08;
-	private float goodFactor = 0.3;
+	private float goodFactor = 0.3f;
 	private double greatBoundary = 0.05;
-	private float greatFactor = 0.5;
+	private float greatFactor = 0.5f;
 	private double perfectBoundary = 0.028;
-	private float perfectFactor = 1.0;
+	private float perfectFactor = 1.0f;
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
 		detectKindsOfNote();
@@ -57,7 +57,7 @@ public class NoteController : MonoBehaviour {
 				this.notes[1].SetActive(false);
 			}
 			this.gameObject.SetActive(false);
-			this.transform.parent.GetComponent<GameController>().scoreValue += this.score;
+			GameController.scoreValue += this.score;
 		}
 
 		isTouchSucceeded();

@@ -93,8 +93,8 @@ public class NoteController : MonoBehaviour {
 		}
 	}
 
-  void detectTouch() {
-	    switch (this.kindOfNote) {
+	void detectTouch() {
+	    switch ((int)(this.kindOfNote)) {
 				/*
 				public class Score	{
 					public int missed;
@@ -111,25 +111,24 @@ public class NoteController : MonoBehaviour {
 	            } else if (Mathf.Abs(time - radius / speed) > 0.050) {
 	                //score 100000 / (number of note) * 0.4
 	                //change color
-									//score.good++;
+					//score.good++;
 	            } else if (Mathf.Abs(time - radius / speed) > 0.028) {
 	                //score 100000 / (number of note) * 0.7
 	                //change color
-									//score.great++;
+					//score.great++;
 	            } else {
 	                //score 100000 / (number of note)
 	                //change color
-									//score.perfect++;
+					//score.perfect++;
 	            }
 	            break;
 	        case 1:
-
-
 	            if (this.touchSuccessful == false) return;
 
 	            if (Mathf.Abs(time - radius / speed) > 0.080) {
 	                this.touchSuccessful = false;
 	            }
 	            break;
-  }
+  		}
+	}
 }

@@ -118,7 +118,7 @@ public class Note : MonoBehaviour
 
         if (head)
         { // head of note
-            this.transform.parent.getComponent<NoteController>().isTouched = onTouch();
+            this.transform.parent.GetComponent<NoteController>().isTouched = onTouch();
             switch (this.kindOfNote)
             {
 

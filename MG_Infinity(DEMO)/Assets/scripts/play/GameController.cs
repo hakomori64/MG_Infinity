@@ -167,6 +167,7 @@ public class GameController : MonoBehaviour {
 			pauseButton.SetActive(true);
 			phase = Phase.playing;
 			audioSource.Play();
+			time = 0;
 		}
 	}
 

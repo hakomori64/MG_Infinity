@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour {
 	public Image thumbnail;
+	public AudioSource bgm;
 	public GameObject easyButton;
 	public GameObject mediumButton;
 	public GameObject hardButton;
@@ -128,6 +129,7 @@ public class SceneController : MonoBehaviour {
 		}
 	}
 
+	//titleをボタンの場所に表示する関数
 	public void displayTitle(){
 		this.centerButton.GetComponentInChildren<Text>().text = title;
 		this.threeUpButton.GetComponentInChildren<Text>().text = si.list[listPath[(si.list.Length+path-3)%si.list.Length]].title;
@@ -137,7 +139,7 @@ public class SceneController : MonoBehaviour {
 		this.twoDownButton.GetComponentInChildren<Text>().text = si.list[listPath[(si.list.Length+path+2)%si.list.Length]].title;
 	}
 
-		//他シーンで変数を読み込むとき用関数
+	//他シーンで変数を読み込むとき用関数
 	public static int getID(){
 		return musicID;
 	}
@@ -171,7 +173,7 @@ public class SceneController : MonoBehaviour {
 	public void movePlay(){
 		SceneManager.LoadScene("play");
 	}
-
+	//option画面への画面遷移
 	public void moveOption(){
 		SceneManager.LoadScene("option");
 	}
@@ -223,7 +225,9 @@ public class SceneController : MonoBehaviour {
 		selectMusic(path,sceneDif);
 		Debug.Log(sceneDif);
 	}
+
 	//NEET系sortボタン~NEATを目指して~
+	//ここから下すべてsortボタン用(まだ動いてない)
 	public void sortMusic(){
 		sortMode = (sortMode+1)%sortModeSum;
 		setListPath(sortMode);

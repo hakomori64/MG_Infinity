@@ -6,8 +6,11 @@ using UnityEngine.UI;
 using LitJson;
 
 public class GameController : MonoBehaviour {
-
-	private int scoreValue;
+	public class ScoreCount {
+		public int bad = 0, good = 0, great = 0, perfect = 0;
+	}
+	private static ScoreCount scoreCount = ScoreCount();
+	private static float scoreValue;
 	private float time = 0f; //used to measure the time.
 	private int id, difficulty; //used to load specified musical score.
 	private string composer, title; //used to load specified musical score.
@@ -25,31 +28,14 @@ public class GameController : MonoBehaviour {
 	// public GameObject audioObject;
 	public AudioSource audioSource;
 	public Text scoreLabel;
-	//private int[,] routeRadian;
-	private Dictionary<string,int[]> routeDict;
 	public GameObject noteController;
 
 	private List<GameObject> generatedNoteControllers;
 
-	private Dictionary<char, int[]> hex_number = new Dictionary<char, int[]>()
-	{
-		{'0', new int[2] {1, 180}},
-		{'1', new int[2] {1, 135}},
-		{'2', new int[2] {1, 90}},
-		{'3', new int[2] {1, 45}},
-		{'4', new int[2] {1, 0}},
-		{'5', new int[2] {1, 315}},
-		{'6', new int[2] {1, 270}},
-		{'7', new int[2] {1, 225}},
-		{'8', new int[2] {0, 45}},
-		{'9', new int[2] {0, 90}},
-		{'A', new int[2] {0, 135}},
-		{'B', new int[2] {0, 180}},
-		{'C', new int[2] {0, 225}},
-		{'D', new int[2] {0, 270}},
-		{'E', new int[2] {0, 315}},
-		{'F', new int[2] {0, 360}},
-	};
+	private int ceilingScore = 100000;
+	private static int scorePerOneNote;
+	private static int baseScore;
+	private static int total; // sum of virtual hit notes
 	enum Phase {
 		beforeTouchToStart,
 		afterTouchToStart,
@@ -74,14 +60,14 @@ public class GameController : MonoBehaviour {
 		// init chart
 		initChart();
 
+		// calculate point per one note
+		calculatePointOfANote();
+
 		// init audioSource
 		initAudioSource();
 
 		// init scoreLabel
 		initScoreLabel();
-
-		// init route dictionary.
-		initRouteDict();
 
 		// init noteControllers
 		initNoteControllers();
@@ -140,9 +126,6 @@ public class GameController : MonoBehaviour {
 
 		int processedNotesCount = 0;
 		float gap = radius/speed; // time between InstantiatedNotes and Touched time
-		//Debug.Log("notes speed is:" + speed);
-		//Debug.Log("number of notes:" + chart.notesTime.Length);
-
 		int scanningRange;
 		if (chart.notesTime.Length - numberOfInstantiatedNotes >= 10) {
 			scanningRange = 10;
@@ -291,49 +274,6 @@ public class GameController : MonoBehaviour {
 		scoreLabel.text = scoreValue.ToString("D6");
 	}
 
-	void initRouteDict(){
-		// 	Who am I? - Human No 0-F wo CockDo 2 HengKang through
-		// 3: 0,1，2  どっちの円から出るか、してん、しゅうてんのかくど
-		// chart.route
-		routeDict = new Dictionary<string,int[]>();
-		//routeRadian = new int[chart.route.Length,3];
-
-		routeDict.Add("01", new int[3] {1, 180, 135});
-		routeDict.Add("12", new int[3] {1, 135, 90});
-		routeDict.Add("23", new int[3] {1, 90, 45});
-		routeDict.Add("34", new int[3] {1, 45, 0});
-		routeDict.Add("45", new int[3] {1, 360, 315});
-		routeDict.Add("56", new int[3] {1, 315, 270});
-		routeDict.Add("67", new int[3] {1, 270, 225});
-		routeDict.Add("70", new int[3] {1, 225, 180});
-		routeDict.Add("F8", new int[3] {0, 0, 45});
-		routeDict.Add("89", new int[3] {0, 45, 90});
-		routeDict.Add("9A", new int[3] {0, 90, 135});
-		routeDict.Add("AB", new int[3] {0, 135, 180});
-		routeDict.Add("BC", new int[3] {0, 180, 225});
-		routeDict.Add("CD", new int[3] {0, 225, 270});
-		routeDict.Add("DE", new int[3] {0, 270, 315});
-		routeDict.Add("EF", new int[3] {0, 315, 360});
-
-		routeDict.Add("10", new int[3] {1, 135, 180});
-		routeDict.Add("21", new int[3] {1, 90, 135});
-		routeDict.Add("32", new int[3] {1, 45, 90});
-		routeDict.Add("43", new int[3] {1, 0, 45});
-		routeDict.Add("54", new int[3] {1, 315, 360});
-		routeDict.Add("65", new int[3] {1, 270, 315});
-		routeDict.Add("76", new int[3] {1, 225, 270});
-		routeDict.Add("07", new int[3] {1, 180, 225});
-		routeDict.Add("8F", new int[3] {0, 45, 0});
-		routeDict.Add("98", new int[3] {0, 90, 45});
-		routeDict.Add("A9", new int[3] {0, 135, 90});
-		routeDict.Add("BA", new int[3] {0, 180, 135});
-		routeDict.Add("CB", new int[3] {0, 225, 180});
-		routeDict.Add("DD", new int[3] {0, 270, 225});
-		routeDict.Add("ED", new int[3] {0, 315, 270});
-		routeDict.Add("FE", new int[3] {0, 360, 315});
-
-	}
-
 	void initNoteControllers() {
 		generatedNoteControllers = new List<GameObject>();
 
@@ -341,9 +281,38 @@ public class GameController : MonoBehaviour {
 			GameObject _noteController = Instantiate(noteController, transform.position, transform.rotation) as GameObject;
 			_noteController.SetActive(false);
 			NoteController noteControllerComponent = _noteController.GetComponent<NoteController>();
-			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed);
+			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, this.scorePerOneNote);
 			generatedNoteControllers.Add(_noteController);
 		}
 	}
 
+	void calculatePointOfANote() {
+		for (int i = 0; i < chart.route; i++) {
+			total += chart.route[i].Length;
+		}
+
+		Debug.Log(this.total);
+		this.scorePerOneNote = (int)(this.ceilingScore / this.total);
+		this.baseScore = this.ceilingScore - this.scorePerOneNote * this.total;
+	}
+
+	public static int getScorePerOneNote() {
+		return this.getScorePerOneNote;
+	}
+
+	public static int getBaseScore() {
+		return this.baseScore;
+	}
+
+	public static float getScoreValue() {
+		return this.scoreValue;
+	}
+
+	public static ScoreCount GetScoreCount() {
+		return this.scoreCount;
+	}
+
+	public static int getTotal() {
+		return this.total;
+	}
 }

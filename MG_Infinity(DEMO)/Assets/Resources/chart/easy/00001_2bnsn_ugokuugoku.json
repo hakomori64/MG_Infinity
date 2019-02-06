@@ -1,13 +1,15 @@
 {
     "version": "1#1.0.1",
     "difficulty": [0, 1],
-    "notesTime": [[3.0, 5.0]],
+    "notesTime": [
+        [3.0, 20.0]
+    ],
     "route": [
-        "0123"
+        "801080108"
     ],
     "bpm": 60,
     "setbpm": [
         [0.0, 0]
     ],
-    "offset": 0
+    "offset": 2
 }

@@ -156,7 +156,7 @@ public class OptionController : MonoBehaviour {
 	}
 
 	public void upMusicVol(){
-		if(mo.musicVol >= maxMusicVol-1){
+		if(mo.musicVol <= maxMusicVol-1){
 			mo.musicVol += 1;
 		}else{
 			mo.musicVol = maxMusicVol;
@@ -174,7 +174,7 @@ public class OptionController : MonoBehaviour {
 	}
 
 	public void upBGMVol(){
-		if(mo.BGMVol >= maxBGMVol-1){
+		if(mo.BGMVol <= maxBGMVol-1){
 			mo.BGMVol += 1;
 		}else{
 			mo.BGMVol = maxBGMVol;

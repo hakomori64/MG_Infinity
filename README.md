@@ -14,12 +14,4 @@
 - pause([cl0wn](https://github.com/cl0wn), [gbtss](https://github.com/syun1015))
 - result([gbtss](https://github.com/syun1015))
 
-## 開発フロー(collaboratorに限る)
-1. (初回のみ)`git clone -b <自分のブランチ名> https://github.com/hakomori64/MG_Infinity.git`
-2. (初回のみ)`cd MG_Infinity; git remote add upstream https://github.com/hakomori64/MG_Infinity.git`
-3. `git pull upstream master`
-4. 作業を行う
-5. `git add .`
-6. `git commit -m "コミットメッセージ"`
-7. `git push upstream <自分のブランチ名>`
-8. githubから***pull request master \<\- \<自分のブランチ名\>***を行う
+二つ並んだ円のそれぞれの中心からノーツが放出され、それらが円の上に来た時にタッチする

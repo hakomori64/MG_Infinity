@@ -118,22 +118,19 @@ public class Note : MonoBehaviour
 
         if (head)
         { // head of note
-            this.transform.parent.getComponent<NoteController>().isTouched = onTouch();
-            switch (this.kindOfNote)
+            this.transform.parent.GetComponent<NoteController>().isTouched = onTouch();
+            switch ((int)this.kindOfNote)
             {
 
                 case 0: // hit-note
-                        //add some function which controls hit-note here!!
                     controlHitNote();
                     break;
 
                 case 1: // long-note
-                        //add some function which controls head of long-note here!!
                     controlHeadOfLongNote();
                     break;
 
                 case 2: // swipe-note
-                        //add some function which controls head of swipe-note here!!
                     controlHeadOfSwipeNote();
                     break;
                 default:
@@ -143,20 +140,20 @@ public class Note : MonoBehaviour
         }
         else
         { // tail of note
-            switch (this.kindOfNote)
+            switch ((int)this.kindOfNote)
             {
                 case 1: // long-note
-                        //add some function which controls head of long-note here!!
                     controlTailOfLongNote();
                     break;
                 case 2: // swipe-note
-                        //add some function which controls head of swipe-note here!!
                     controlTailOfSwipeNote();
                     break;
                 default:
                     break;
             }
         }
+
+        
         noteTime += Time.deltaTime;
     }
 
@@ -331,9 +328,7 @@ public class Note : MonoBehaviour
         this.transform.position = new Vector2(this.center + this.radius * Mathf.Cos(this.rad), this.radius * Mathf.Sin(this.rad));
 
     }
-
-
-    bool onTouch() {
+    bool onTouch() { //if this object is touched by user, this function returns true, else returns false
         if (Application.isEditor) {
             if (Input.GetMouseButtonDown(0)) {
                 return true;

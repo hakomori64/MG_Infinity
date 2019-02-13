@@ -5,7 +5,6 @@ using UnityEngine;
 // this class is responsible for a note (hit-note, swipe-note, long-note). one NoteController corresponds one note.
 // this class administrate note score, time, instantiating and destroying.
 public class NoteController : MonoBehaviour {
-
 	enum KindsOfNote {
 		HitNotes,
 		LongNotes,
@@ -17,14 +16,22 @@ public class NoteController : MonoBehaviour {
 	private double start, end;
 	private float radius, speed;
 	private KindsOfNote kindOfNote;
+	private int scorePerOneNote;
 
 	private float time = 0;
+	private int score = 0;
 	public GameObject notePrefab;
 	private GameObject[] notes;
 
 	public bool isTouched;
 	private bool touchSuccessful = true;
-
+	private double ttl = 0.001;
+	private double goodBoundary = 0.08;
+	private float goodFactor = 0.3f;
+	private double greatBoundary = 0.05;
+	private float greatFactor = 0.5f;
+	private double perfectBoundary = 0.028;
+	private float perfectFactor = 1.0f;
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
 		detectKindsOfNote();
@@ -44,23 +51,26 @@ public class NoteController : MonoBehaviour {
 			}
 		}
 
-		if (time >= this.end - this.start + this.radius / this.speed) {
+		if (time >= this.end - this.start + this.radius / this.speed + this.goodBoundary) {
 			this.notes[0].SetActive(false);
 			if (this.notes.Length == 2) {
 				this.notes[1].SetActive(false);
 			}
 			this.gameObject.SetActive(false);
+			GameController.scoreValue += this.score;
 		}
 
+		isTouchSucceeded();
 		time += Time.deltaTime;
 	}
-	public void Create (int id, string route, double start, double end, float radius, float speed) {
+	public void Create (int id, string route, double start, double end, float radius, float speed, int scorePerOneNote) {
 		this.id = id;
 		this.route = route;
 		this.start = start;
 		this.end = end;
 		this.radius = radius;
 		this.speed = speed;
+		this.scorePerOneNote = scorePerOneNote;
 		// Debug.Log((int)KindsOfNote.HitNotes);
 		// Debug.Log((int)KindsOfNote.LongNotes);
 		// Debug.Log((int)KindsOfNote.SwipeNotes);
@@ -68,6 +78,8 @@ public class NoteController : MonoBehaviour {
 
 	//
 	void detectKindsOfNote() {
+		// assign KindsOfNote to kindOfNote and instantiate notes
+
 		if (Mathf.Abs((float)(this.end - this.start)) < Mathf.Epsilon) { //hitnotes
 			this.kindOfNote = KindsOfNote.HitNotes;
 			this.notes = new GameObject[1];
@@ -91,17 +103,21 @@ public class NoteController : MonoBehaviour {
 
 
 		}
+		this.notes[0].transform.parent = this.transform;
 	}
 
-  void detectTouch() {
-	    switch (this.kindOfNote) {
-				/*
+	void isTouchSucceeded() {
+		// タッチの状態から得点を算出し、scoreにセットする
+		// GameControllerのscoreCountの値も更新する
+
+
+		/* 
+		switch ((int)(this.kindOfNote)) {
 				public class Score	{
 					public int missed;
 					public int good;
 					public int great;
 					public int perfect;}
-				*/
 	        case 0:
 	            //早くタッチした場合はこれでいける。遅くタッチした場合、これじゃダメ。
 	            //なぜなら、(end - start)秒後にノートのSetActiveはfalseになりスクリプトは実行されないから。
@@ -111,25 +127,27 @@ public class NoteController : MonoBehaviour {
 	            } else if (Mathf.Abs(time - radius / speed) > 0.050) {
 	                //score 100000 / (number of note) * 0.4
 	                //change color
-									//score.good++;
+					//score.good++;
 	            } else if (Mathf.Abs(time - radius / speed) > 0.028) {
 	                //score 100000 / (number of note) * 0.7
 	                //change color
-									//score.great++;
+					//score.great++;
 	            } else {
 	                //score 100000 / (number of note)
 	                //change color
-									//score.perfect++;
+					//score.perfect++;
 	            }
 	            break;
 	        case 1:
-
-
 	            if (this.touchSuccessful == false) return;
 
 	            if (Mathf.Abs(time - radius / speed) > 0.080) {
 	                this.touchSuccessful = false;
 	            }
 	            break;
-  }
+  		}
+		*/
+	}
 }
+
+

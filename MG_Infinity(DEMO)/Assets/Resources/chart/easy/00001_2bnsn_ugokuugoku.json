@@ -1,15 +1,256 @@
 {
     "version": "1#1.0.1",
     "difficulty": [0, 1],
-    "notesTime": [
-        [3.0, 20.0]
-    ],
+    "notesTime": [2.168,2.168
+    ]
+    ,
     "route": [
-        "801080108"
+        "4"
     ],
-    "bpm": 60,
+    "bpm": 123,
     "setbpm": [
         [0.0, 0]
     ],
     "offset": 2
 }
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [6.08,6.08
+    ],
+    "route": [
+        "C"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [8.2805,8.2805
+    ],
+    "route": [
+        "2"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [9.992,9.992
+    ],
+    "route": [
+        "B"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [13.904,13.904
+    ],
+    "route": [
+        "5"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [16.1045,16.1045
+    ],
+    "route": [
+        "9"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [16.838,16.838
+    ],
+    "route": [
+        "A"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [17.816,25.64
+    ],
+    "route": [
+        "4"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [18.305,18.305
+    ],
+    "route": [
+        "8"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [19.283,19.283
+    ],
+    "route": [
+        "9"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [20.662,20.662
+    ],
+    "route": [
+        "A"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [21.64,21.64
+    ],
+    "route": [
+        "B"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [22.618,22.618
+    ],
+    "route": [
+        "C"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [23.569,23.569
+    ],
+    "route": [
+        "D"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [24.547,24.547
+    ],
+    "route": [
+        "E"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [25.525,25.525
+    ],
+    "route": [
+        "F"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+{
+    "version": "1#1.0.1",
+    "difficulty": [0, 1],
+    "notesTime": [
+        [22.217,22.217
+    ],
+    "route": [
+        "F"
+    ],
+    "bpm": 123,
+    "setbpm": [
+        [0.0, 0]
+    ],
+    "offset": 2
+}
+

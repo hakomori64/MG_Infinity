@@ -45,7 +45,6 @@ public class Note : MonoBehaviour
     public float distanceOfHead = 0, distanceOfTail = 0;
     private int routeLength;
     private Note parentNote;
-    private bool touchSuccessful = true;
 
     // Use this for initialization
     void Start()
@@ -118,7 +117,6 @@ public class Note : MonoBehaviour
 
         if (head)
         { // head of note
-            this.transform.parent.GetComponent<NoteController>().isTouched = onTouch();
             switch ((int)this.kindOfNote)
             {
 
@@ -152,6 +150,7 @@ public class Note : MonoBehaviour
                     break;
             }
         }
+
 
         
         noteTime += Time.deltaTime;
@@ -328,7 +327,7 @@ public class Note : MonoBehaviour
         this.transform.position = new Vector2(this.center + this.radius * Mathf.Cos(this.rad), this.radius * Mathf.Sin(this.rad));
 
     }
-    bool onTouch() { //if this object is touched by user, this function returns true, else returns false
+    public bool onTouch() { //if this object is touched by user, this function returns true, else returns false
         if (Application.isEditor) {
             if (Input.GetMouseButtonDown(0)) {
                 return true;

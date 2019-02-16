@@ -274,6 +274,9 @@ public class GameController : MonoBehaviour {
 
 	void calculatePointOfANote() {
 		for (int i = 0; i < chart.route.Length; i++) {
+			if (Mathf.Abs((float)chart.notesTime[i][1] - (float)chart.notesTime[i][0]) > Mathf.Epsilon && chart.route[i].Length == 1) {
+				total += 1;
+			} 
 			total += chart.route[i].Length;
 		}
 

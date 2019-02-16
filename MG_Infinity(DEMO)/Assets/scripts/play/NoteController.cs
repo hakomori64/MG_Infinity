@@ -23,7 +23,7 @@ public class NoteController : MonoBehaviour {
 	public GameObject notePrefab;
 	private GameObject[] notes;
 
-	public bool isTouched;
+	public Note[] noteComponents;
 	private bool touchSuccessful = true;
 	private double ttl = 0.001;
 	private double goodBoundary = 0.08;
@@ -61,6 +61,7 @@ public class NoteController : MonoBehaviour {
 		}
 
 		isTouchSucceeded();
+
 		time += Time.deltaTime;
 	}
 	public void Create (int id, string route, double start, double end, float radius, float speed, int scorePerOneNote) {
@@ -81,11 +82,12 @@ public class NoteController : MonoBehaviour {
 		// assign KindsOfNote to kindOfNote and instantiate notes
 
 		if (Mathf.Abs((float)(this.end - this.start)) < Mathf.Epsilon) { //hitnotes
+			this.noteComponents = new Note[1];
 			this.kindOfNote = KindsOfNote.HitNotes;
 			this.notes = new GameObject[1];
 			this.notes[0] = Instantiate(notePrefab, transform.position, transform.rotation);
-			Note _note = this.notes[0].GetComponent<Note>();
-			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
+			this.noteComponents[0] = this.notes[0].GetComponent<Note>();
+			this.noteComponents[0].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
 		} else { //long | swipe note
 			if (this.route.Length == 1) {
 				this.kindOfNote = KindsOfNote.LongNotes;
@@ -93,12 +95,13 @@ public class NoteController : MonoBehaviour {
 				this.kindOfNote = KindsOfNote.SwipeNotes;
 			}
 			this.notes = new GameObject[2];
+			this.noteComponents = new Note[2];
 			this.notes[0] = Instantiate(notePrefab, transform.position, transform.rotation);
-			Note _note = this.notes[0].GetComponent<Note>();
-			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
+			this.noteComponents[0] = this.notes[0].GetComponent<Note>();
+			this.noteComponents[0].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
 			this.notes[1] = Instantiate(notePrefab, transform.position, transform.rotation);
-			_note = this.notes[1].GetComponent<Note>();
-			_note.Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, false);
+			this.noteComponents[1] = this.notes[1].GetComponent<Note>();
+			this.noteComponents[1].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, false);
 			notes[1].transform.parent = notes[0].transform;// 紐づけ
 
 
@@ -110,34 +113,29 @@ public class NoteController : MonoBehaviour {
 		// タッチの状態から得点を算出し、scoreにセットする
 		// GameControllerのscoreCountの値も更新する
 
-
-		/* 
 		switch ((int)(this.kindOfNote)) {
-				public class Score	{
-					public int missed;
-					public int good;
-					public int great;
-					public int perfect;}
 	        case 0:
 	            //早くタッチした場合はこれでいける。遅くタッチした場合、これじゃダメ。
 	            //なぜなら、(end - start)秒後にノートのSetActiveはfalseになりスクリプトは実行されないから。
-	            if (Mathf.Abs(time - radius / speed) > 0.080) {
-	                // score.missed++;
-	                return;
-	            } else if (Mathf.Abs(time - radius / speed) > 0.050) {
-	                //score 100000 / (number of note) * 0.4
-	                //change color
-					//score.good++;
-	            } else if (Mathf.Abs(time - radius / speed) > 0.028) {
-	                //score 100000 / (number of note) * 0.7
-	                //change color
-					//score.great++;
-	            } else {
-	                //score 100000 / (number of note)
-	                //change color
-					//score.perfect++;
-	            }
-	            break;
+				if (noteComponents[0].onTouch()) {
+					if (Mathf.Abs(time - radius / speed) > 0.080) {
+						// score.missed++;
+						return;
+					} else if (Mathf.Abs(time - radius / speed) > 0.050) {
+						//score 100000 / (number of note) * 0.4
+						//change color
+						//score.good++;
+					} else if (Mathf.Abs(time - radius / speed) > 0.028) {
+						//score 100000 / (number of note) * 0.7
+						//change color
+						//score.great++;
+					} else {
+						//score 100000 / (number of note)
+						//change color
+						//score.perfect++;
+					}
+				}
+				break;
 	        case 1:
 	            if (this.touchSuccessful == false) return;
 
@@ -146,7 +144,6 @@ public class NoteController : MonoBehaviour {
 	            }
 	            break;
   		}
-		*/
 	}
 }
 

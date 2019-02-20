@@ -115,6 +115,7 @@ public class Note : MonoBehaviour
     void Update()
     {
 
+        //move note
         if (head)
         { // head of note
             switch ((int)this.kindOfNote)
@@ -173,7 +174,6 @@ public class Note : MonoBehaviour
         this.transform.position = new Vector2(this.center + this.distanceOfHead * Mathf.Cos(this.rad), this.distanceOfHead * Mathf.Sin(this.rad));
         this.distanceOfHead = this.noteTime * speed;
     }
-
     void controlHeadOfLongNote()
     {
         if (noteTime <= radius / speed)
@@ -194,14 +194,12 @@ public class Note : MonoBehaviour
         lineRenderer.SetPosition(0, this.transform.position);
         lineRenderer.SetPosition(1, new Vector2(this.center + this.distanceOfTail * Mathf.Cos(this.rad), this.distanceOfTail * Mathf.Sin(this.rad)));
     }
-
     void controlTailOfLongNote()
     {
         //Debug.Log("controlTailOfLongNote function is called");
         this.transform.position = new Vector2(this.center + this.distanceOfTail * Mathf.Cos(this.rad), this.distanceOfTail * Mathf.Sin(this.rad));
         this.distanceOfTail = this.noteTime * speed;
     }
-
     void controlHeadOfSwipeNote()
     {
 
@@ -301,7 +299,6 @@ public class Note : MonoBehaviour
 
 
     }
-
     void controlTailOfSwipeNote()
     {
         this.rad = this.parentNote.rad + Mathf.PI;
@@ -310,7 +307,6 @@ public class Note : MonoBehaviour
         this.transform.position = new Vector2(this.transform.parent.transform.position.x + this.distanceOfTail * Mathf.Cos(this.rad), this.transform.parent.transform.position.y + this.distanceOfTail * Mathf.Sin(this.rad));
 
     }
-
     void translateNote(float startDeg, float endDeg)
     {
         double currentAngle;

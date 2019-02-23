@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,24 +6,39 @@ using UnityEngine.UI;
 public class resultUI : MonoBehaviour {
 
 	private int ceilingScore = 100000;
+	public enum Detection{
+		bad,
+		good,
+		great,
+		perfect
+	}
 	private int scoreSum = 0;
-	public ScoreCount finalScore = ScoreCount();
-	
+	private Dictionary<string, int[]> Score;
+	private Dictionary<string, int> ScoreSum = {
+		{"Hit",20},
+		{"Long",5},
+		{"Swipe",3}
+	};
 	public GameObject score_object = null;
 	// Use this for initialization
 	void Start () {
 		if (Application.isEditor) {
-			finalScore.bad = 0;
-			finalScore.good = 0;
-			finalScore.great = 0;
-			finalScore.perfect = 0;
+			Score.Add("Hit",{0,3,7,10});
+			Score.Add("Long",{0,1,2,2});
+			Score.Add("Swipe",{0,0,2,1});
 		} else { 
-			finalScore = GameController.GetScoreCount();
+			Score = GameController.GetScoreCount();
+			//したいこと：ScoreSumを取得するためにScoreの各キーの和を求める
+			ScoreSum["Hit"] = Score["Hit"].Sum();
+			ScoreSum["Long"] = Score["Long"].Sum();
+			ScoreSum["Swipe"] = Score["Swipe"].Sum();
 
 		}
 		
 		Text scoreText = score_object.GetComponent<Text> ();
 		scoreText.text = String.Format("{0:D6}", scoreSum);
+		//したいこと各ノーツごとに結果の割合を詳細表示
+
 	}
 	
 	// Update is called once per frame

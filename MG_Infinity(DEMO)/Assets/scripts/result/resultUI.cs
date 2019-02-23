@@ -12,7 +12,7 @@ public class resultUI : MonoBehaviour {
 		great,
 		perfect
 	}
-	private int scoreSum = 0;
+	private int totalScoreSum = 0;
 	private Dictionary<string, int[]> Score;
 	private Dictionary<string, int> ScoreSum = {
 		{"Hit",20},
@@ -36,7 +36,7 @@ public class resultUI : MonoBehaviour {
 		}
 		
 		Text scoreText = score_object.GetComponent<Text> ();
-		scoreText.text = String.Format("{0:D6}", scoreSum);
+		scoreText.text = String.Format("{0:D6}", totalScoreSum);
 		//したいこと各ノーツごとに結果の割合を詳細表示
 
 	}

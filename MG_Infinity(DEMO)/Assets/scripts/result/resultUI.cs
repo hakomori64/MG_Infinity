@@ -14,6 +14,7 @@ public class resultUI : MonoBehaviour {
 	}
 	private int totalScoreSum = 0;
 	private Dictionary<string, int[]> Score;
+	/*
 	private Dictionary<string, int> ScoreSum = {
 		{"Hit",20},
 		{"Long",5},
@@ -45,4 +46,5 @@ public class resultUI : MonoBehaviour {
 	void Update () {
 		
 	}
+	*/
 }

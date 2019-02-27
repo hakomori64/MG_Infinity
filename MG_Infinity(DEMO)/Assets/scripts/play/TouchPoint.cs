@@ -6,14 +6,14 @@ public class TouchPoint : MonoBehaviour {
 
 	//use this for initialization
 	public int id;
+    public TouchPhase touchPhase;
 	void Start () {
-		
+		touchPhase = TouchPhase.Ended;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if(onTouch()) {
-			Debug.Log(this.id);
 		}	
 	}
 
@@ -27,6 +27,9 @@ public class TouchPoint : MonoBehaviour {
 			RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 
 			if (hit.collider != null && hit.collider.transform == this.transform) {
+                if (Input.GetMouseButtonDown(0)) touchPhase = TouchPhase.Began;
+                if (Input.GetMouseButton(0)) touchPhase = TouchPhase.Moved;
+                if (Input.GetMouseButtonUp(0)) touchPhase = TouchPhase.Ended;
 				return true;
 			}
         } else {
@@ -34,15 +37,12 @@ public class TouchPoint : MonoBehaviour {
                 for (int i = 0; i < Input.touchCount; i++) {
                     Touch t = Input.GetTouch(i);
 
-                    if(t.phase == TouchPhase.Began) {
-                        Ray ray = Camera.main.ScreenPointToRay(t.position);
-                        RaycastHit hit;
+                    Ray ray = Camera.main.ScreenPointToRay(t.position);
+                    RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 
-                        if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
-                            if (hit.collider.gameObject == this.gameObject) {
-                                return true;
-                            }
-                        }
+                    if (hit.collider != null && hit.collider.transform == this.transform) {
+                        touchPhase = t.phase;
+                        return true;
                     }
                 }
             }

@@ -4,14 +4,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using LitJson;
+using System;
 
 public class GameController : MonoBehaviour {
 
 	//このクラスのインスタンスに判定を数えさせる
-	public class ScoreCount {
-		public int bad = 0, good = 0, great = 0, perfect = 0;
-	}
-	public static ScoreCount scoreCount; //これに判定を数えさせる
+	
+
+	public static Dictionary<string, int[]> score = new Dictionary<string, int[]>()
+	{
+			{"Hit", new int[4] {0, 0, 0, 0}},
+			{"Long", new int[4] {0, 0, 0, 0}},
+			{"Swipe", new int[4] {0, 0, 0, 0}},
+	};
+	
+
+	//public static Score scoreCount; //これに判定を数えさせる
 	public static float scoreValue; //点数を保持する。NoteControllerからこれに得点を加算させる
 	private float time = 0f; //スタートが消えてからの秒数が保持される
 	private int id, difficulty; //曲のid、難易度が保持される
@@ -256,8 +264,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	void initScoreLabel() {
-		GameController.scoreValue = 0;
-		scoreLabel.text = ((int)(GameController.scoreValue)).ToString("D6");
+		scoreValue = 0;
+		scoreLabel.text = ((int)(scoreValue)).ToString("D6");
 	}
 
 	void initNoteControllers() {
@@ -267,7 +275,7 @@ public class GameController : MonoBehaviour {
 			GameObject _noteController = Instantiate(noteController, transform.position, transform.rotation) as GameObject;
 			_noteController.SetActive(false);
 			NoteController noteControllerComponent = _noteController.GetComponent<NoteController>();
-			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, GameController.scorePerOneNote);
+			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, scorePerOneNote);
 			generatedNoteControllers.Add(_noteController);
 		}
 	}
@@ -280,9 +288,9 @@ public class GameController : MonoBehaviour {
 			total += chart.route[i].Length;
 		}
 
-		Debug.Log(GameController.total);
-		GameController.scorePerOneNote = (int)(this.ceilingScore / GameController.total);
-		GameController.baseScore = this.ceilingScore - GameController.scorePerOneNote * GameController.total;
+		Debug.Log(total);
+		scorePerOneNote = (int)(this.ceilingScore / total);
+		baseScore = this.ceilingScore - scorePerOneNote * total;
 	}
 
 	public static int getScorePerOneNote() {
@@ -297,9 +305,11 @@ public class GameController : MonoBehaviour {
 		return scoreValue;
 	}
 
-	public static ScoreCount GetScoreCount() {
-		return scoreCount;
+	
+	public static Dictionary<string, int[]> GetScoreCount() {
+		return score;
 	}
+	
 
 	public static int getTotal() {
 		return total;
@@ -307,11 +317,16 @@ public class GameController : MonoBehaviour {
 
 	void initStaticVariables() {
 		// staticで宣言されている変数を0で初期化する
-		GameController.scorePerOneNote = 0;
-		GameController.total = 0;
-		GameController.scoreCount = new ScoreCount();
-		GameController.baseScore = 0;
-		GameController.scoreValue = 0;
+		scorePerOneNote = 0;
+		total = 0;
+		score = new Dictionary<string, int[]>()
+		{
+			{"Hit", new int[4] {0, 0, 0, 0}},
+			{"Long", new int[4] {0, 0, 0, 0}},
+			{"Swipe", new int[4] {0, 0, 0, 0}},
+		};
+		baseScore = 0;
+		scoreValue = 0;
 	}
 
 }

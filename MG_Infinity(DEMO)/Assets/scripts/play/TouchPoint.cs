@@ -23,21 +23,12 @@ public class TouchPoint : MonoBehaviour {
 
 	public bool onTouch() { //if this object is touched by user, this function returns true, else returns false
         if (Application.isEditor) {
-            if (Input.GetMouseButtonDown(0)) {
-				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
-				if (hit != null && hit.collider != null) {
-                	return true;
-				}
-            }
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 
-            if (Input.GetMouseButton(0)) {
-               	Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
-				if (hit != null && hit.collider != null) {
-                	return true;
-				}
-            }
+			if (hit.collider != null && hit.collider.transform == this.transform) {
+				return true;
+			}
         } else {
             if (Input.touchCount > 0) {
                 for (int i = 0; i < Input.touchCount; i++) {

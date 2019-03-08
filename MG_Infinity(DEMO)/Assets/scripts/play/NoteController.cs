@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using LitJson;
 
 // this class is responsible for a note (hit-note, swipe-note, long-note). one NoteController corresponds one note.
 // this class administrate note score, time, instantiating and destroying.
@@ -9,6 +11,17 @@ public class NoteController : MonoBehaviour {
 		HitNotes,
 		LongNotes,
 		SwipeNotes
+	}
+
+	[Serializable]
+	public class MusicOption
+	{
+		public float speed;
+		public int size;
+		public float thickness;
+		public int musicVol;
+		public int BGMVol;
+		public float adjustment;
 	}
 
 	public int id;
@@ -21,8 +34,11 @@ public class NoteController : MonoBehaviour {
 	private float time = 0;
 	private int score = 0;
 	public GameObject notePrefab;
-	private GameObject[] notes;
+	public TouchPointController TouchPointController;
 
+	private MusicOption chart = new MusicOption();
+	private GameObject[] notes;
+	private bool isTouchDetectionDone = false; 
 	public Note[] noteComponents;
 	private bool touchSuccessful = true;
 	private double ttl = 0.001;
@@ -34,8 +50,9 @@ public class NoteController : MonoBehaviour {
 	private float perfectFactor = 1.0f;
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
+		initChart();
+		this.speed = chart.speed;
 		detectKindsOfNote();
-
 	}
 
 	// Update is called once per frame
@@ -51,7 +68,7 @@ public class NoteController : MonoBehaviour {
 			}
 		}
 
-		if (time >= this.end - this.start + this.radius / this.speed + this.goodBoundary) {
+		if (time >= this.end - this.start + this.radius / this.speed + this.goodBoundary + this.ttl) {
 			this.notes[0].SetActive(false);
 			if (this.notes.Length == 2) {
 				this.notes[1].SetActive(false);
@@ -60,7 +77,7 @@ public class NoteController : MonoBehaviour {
 			GameController.scoreValue += this.score;
 		}
 
-		isTouchSucceeded();
+		detectAccuracy();
 
 		time += Time.deltaTime;
 	}
@@ -72,9 +89,6 @@ public class NoteController : MonoBehaviour {
 		this.radius = radius;
 		this.speed = speed;
 		this.scorePerOneNote = scorePerOneNote;
-		// Debug.Log((int)KindsOfNote.HitNotes);
-		// Debug.Log((int)KindsOfNote.LongNotes);
-		// Debug.Log((int)KindsOfNote.SwipeNotes);
 	}
 
 	//
@@ -109,33 +123,41 @@ public class NoteController : MonoBehaviour {
 		this.notes[0].transform.parent = this.transform;
 	}
 
-	void isTouchSucceeded() {
+	void detectAccuracy() {
 		// タッチの状態から得点を算出し、scoreにセットする
 		// GameControllerのscoreCountの値も更新する
+		if (isTouchDetectionDone) return;
+
 
 		switch ((int)(this.kindOfNote)) {
 	        case 0:
-	            //早くタッチした場合はこれでいける。遅くタッチした場合、これじゃダメ。
-	            //なぜなら、(end - start)秒後にノートのSetActiveはfalseになりスクリプトは実行されないから。
-				if (noteComponents[0].onTouch()) {
-					if (Mathf.Abs(time - radius / speed) > 0.080) {
-						// score.missed++;
-						return;
-					} else if (Mathf.Abs(time - radius / speed) > 0.050) {
-						//score 100000 / (number of note) * 0.4
-						//change color
-						//score.good++;
-					} else if (Mathf.Abs(time - radius / speed) > 0.028) {
-						//score 100000 / (number of note) * 0.7
-						//change color
-						//score.great++;
+
+				float timeDifference = this.time - this.radius / speed + chart.adjustment;
+				if (timeDifference > this.goodBoundary + this.ttl) {
+					GameController.score["Hit"][3]++;
+					this.isTouchDetectionDone = true;
+				}
+				timeDifference = Mathf.Abs(timeDifference);
+		    	if (TouchPointController.touchComponent[Convert.ToInt32(this.route, 16)].touchPhase == TouchPhase.Began) {
+					if (timeDifference < this.goodBoundary + this.ttl) {
+						if (timeDifference > this.goodBoundary) { //bad
+							GameController.score["Hit"][3]++;
+							this.isTouchDetectionDone = true;
+						} else if (timeDifference > this.greatBoundary) { //good
+							GameController.score["Hit"][2]++;
+							this.isTouchDetectionDone = true;
+						} else if (timeDifference > this.perfectBoundary) { //great
+							GameController.score["Hit"][1]++;
+							this.isTouchDetectionDone = true;
+						} else {
+							GameController.score["Hit"][0]++; //perfect	
+							this.isTouchDetectionDone = true;
+						}
 					} else {
-						//score 100000 / (number of note)
-						//change color
-						//score.perfect++;
+						return;
 					}
 				}
-				break;
+				break; 
 	        case 1:
 	            if (this.touchSuccessful == false) return;
 
@@ -144,6 +166,13 @@ public class NoteController : MonoBehaviour {
 	            }
 	            break;
   		}
+	}
+
+	void initChart() {
+		string path = "";
+		string json = Resources.Load(path).ToString();
+
+		chart = JsonMapper.ToObject<MusicOption>(json);
 	}
 }
 

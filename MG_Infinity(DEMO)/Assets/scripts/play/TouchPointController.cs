@@ -8,7 +8,7 @@ public class TouchPointController : MonoBehaviour {
 	public GameObject TouchPointPrefab;
 	public float radius;
 	private GameObject[] touchPoints = new GameObject[15];
-	private TouchPoint[] touchComponent = new TouchPoint[15];
+	public TouchPoint[] touchComponent = new TouchPoint[15];
 	void Start () {
 		for (int i = 0; i < 8; i++) {
 			touchPoints[i] = Instantiate(TouchPointPrefab, new Vector3(radius + radius * Mathf.Cos(45 * i * Mathf.Deg2Rad), radius * Mathf.Sin(45 * i * Mathf.Deg2Rad), 0), Quaternion.identity);
@@ -28,11 +28,13 @@ public class TouchPointController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 		if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0) || Input.GetMouseButtonUp(0)) {
 			for (int i = 0; i < touchComponent.Length; i++) {
 				Debug.Log("i: " + i + ": " + touchComponent[i].touchPhase);
 			}
 		}
+		*/
 	}
 
 

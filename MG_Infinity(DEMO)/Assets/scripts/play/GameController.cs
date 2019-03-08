@@ -11,7 +11,8 @@ public class GameController : MonoBehaviour {
 	//このクラスのインスタンスに判定を数えさせる
 	
 
-	public static Dictionary<string, int[]> score = new Dictionary<string, int[]>()
+	//{perfect, great, good, bad}の順に、ノーツの数を数える
+	public static Dictionary<string, int[]> score = new Dictionary<string, int[]>() 
 	{
 			{"Hit", new int[4] {0, 0, 0, 0}},
 			{"Long", new int[4] {0, 0, 0, 0}},

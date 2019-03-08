@@ -246,7 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 274909255}
   - component: {fileID: 274909254}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: playcircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 274909253}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 3.15, y: 3.1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1264,6 +1264,49 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 872005432}
   m_CullTransparentMesh: 0
+--- !u!1 &1077148600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1077148602}
+  - component: {fileID: 1077148601}
+  m_Layer: 0
+  m_Name: TouchPointController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1077148601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1077148600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7be1755bb65eb54587413f441785940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TouchPointPrefab: {fileID: 1209064188927300, guid: 4f122fe445d92d94681e8fa7f9acbd51,
+    type: 2}
+  radius: 3
+--- !u!4 &1077148602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1077148600}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1102926998
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,7 +1384,6 @@ MonoBehaviour:
   touchToStart: {fileID: 2103198458}
   timerController: {fileID: 1102926998}
   timer: {fileID: 317601840}
-  startScene: {fileID: 557943139}
   audioSource: {fileID: 76932808}
   scoreLabel: {fileID: 1546977107}
   noteController: {fileID: 1033559205199406, guid: 7512c7ad691cdb841937358c92f7515a,

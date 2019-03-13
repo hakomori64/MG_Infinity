@@ -13,15 +13,14 @@ public class NoteController : MonoBehaviour {
 		SwipeNotes
 	}
 
-	[Serializable]
-	public class MusicOption
-	{
-		public float speed;
+	[System.Serializable]
+	public class MusicOption {
+		public double speed;
 		public int size;
-		public float thickness;
+		public double thickness;
 		public int musicVol;
 		public int BGMVol;
-		public float adjustment;
+		public double adjustment;
 	}
 
 	public int id;
@@ -34,10 +33,10 @@ public class NoteController : MonoBehaviour {
 	private float time = 0;
 	private int score = 0;
 	public GameObject notePrefab;
-	public TouchPointController TouchPointController;
+	private TouchPointController TouchPointController;
 
 	private MusicOption chart = new MusicOption();
-	private GameObject[] notes;
+	public GameObject[] notes;
 	private bool isTouchDetectionDone = false; 
 	public Note[] noteComponents;
 	private bool touchSuccessful = true;
@@ -48,18 +47,22 @@ public class NoteController : MonoBehaviour {
 	private float greatFactor = 0.5f;
 	private double perfectBoundary = 0.028;
 	private float perfectFactor = 1.0f;
+
+	private List<List<TouchPhase>> touchPhaseList = new List<List<TouchPhase>>();
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
+		TouchPointController = GameObject.Find("TouchPointController").GetComponent<TouchPointController>();
 		initChart();
-		this.speed = chart.speed;
+		this.speed = (float)chart.speed;
 		detectKindsOfNote();
+		initTouchPhaseList();
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if (time == 0) {
 			notes[0].SetActive(true);
-			notes[1].SetActive(false);
+			if (this.kindOfNote != KindsOfNote.HitNotes) notes[1].SetActive(false);
 		}
 
 		if (this.kindOfNote != KindsOfNote.HitNotes) {
@@ -78,6 +81,10 @@ public class NoteController : MonoBehaviour {
 		}
 
 		detectAccuracy();
+		updateTouchPhaseList();
+		if (Input.GetMouseButton(1)) {
+			Debug.Log(GameController.score["Hit"][0].ToString() + GameController.score["Hit"][1].ToString() + GameController.score["Hit"][2].ToString() + GameController.score["Hit"][3].ToString());
+		}
 
 		time += Time.deltaTime;
 	}
@@ -132,30 +139,29 @@ public class NoteController : MonoBehaviour {
 		switch ((int)(this.kindOfNote)) {
 	        case 0:
 
-				float timeDifference = this.time - this.radius / speed + chart.adjustment;
+				float timeDifference = this.time - this.radius / speed + (float)chart.adjustment;
 				if (timeDifference > this.goodBoundary + this.ttl) {
 					GameController.score["Hit"][3]++;
 					this.isTouchDetectionDone = true;
 				}
 				timeDifference = Mathf.Abs(timeDifference);
-		    	if (TouchPointController.touchComponent[Convert.ToInt32(this.route, 16)].touchPhase == TouchPhase.Began) {
+		    	if ((touchPhaseList[Convert.ToInt32(this.route, 16)][0] == TouchPhase.Ended && touchPhaseList[Convert.ToInt32(this.route, 16)][1] == TouchPhase.Moved)
+				  || touchPhaseList[Convert.ToInt32(this.route, 16)][0] == TouchPhase.Began) {
 					if (timeDifference < this.goodBoundary + this.ttl) {
 						if (timeDifference > this.goodBoundary) { //bad
 							GameController.score["Hit"][3]++;
-							this.isTouchDetectionDone = true;
 						} else if (timeDifference > this.greatBoundary) { //good
 							GameController.score["Hit"][2]++;
-							this.isTouchDetectionDone = true;
 						} else if (timeDifference > this.perfectBoundary) { //great
 							GameController.score["Hit"][1]++;
-							this.isTouchDetectionDone = true;
 						} else {
 							GameController.score["Hit"][0]++; //perfect	
-							this.isTouchDetectionDone = true;
 						}
+						this.isTouchDetectionDone = true;
 					} else {
-						return;
+						Debug.Log(id + " 遠すぎて判定外");
 					}
+					Debug.Log("id: " + id + " " + GameController.score["Hit"][0] + GameController.score["Hit"][1] + GameController.score["Hit"][2] + GameController.score["Hit"][3]);
 				}
 				break; 
 	        case 1:
@@ -169,11 +175,28 @@ public class NoteController : MonoBehaviour {
 	}
 
 	void initChart() {
-		string path = "";
+		string path = "MusicOption";
 		string json = Resources.Load(path).ToString();
 
 		chart = JsonMapper.ToObject<MusicOption>(json);
 	}
+
+	void initTouchPhaseList() {
+		for (int i = 0; i < 15; i++) touchPhaseList.Add(new List<TouchPhase> {TouchPhase.Ended, TouchPhase.Ended});
+	}
+
+	void updateTouchPhaseList() {
+		for (int i = 0; i < 15; i++) {
+			touchPhaseList[i].RemoveAt(0);
+			touchPhaseList[i].Add(TouchPointController.touchComponent[i].touchPhase);
+		}
+	}
+
+	void debugTouchPhaseList() {
+		Debug.Log(touchPhaseList[8][0] + " " + touchPhaseList[8][1]);
+	}
+
+	
 }
 
 

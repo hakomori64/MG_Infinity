@@ -164,8 +164,8 @@ public class GameController : MonoBehaviour {
 		}
 
 		for (int i = 0; i < scanningRange; i++) {
-			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time - chart.offset &&
-			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) 
+			if (chart.notesTime[numberOfInstantiatedNotes + i][0] + 0.001 - gap <= time - chart.offset &&
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + 0.001 + Time.deltaTime - gap >= time - chart.offset) 
 			{
 				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
 				processedNotesCount++;

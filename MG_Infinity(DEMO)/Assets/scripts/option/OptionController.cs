@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OptionController : MonoBehaviour {
 	public GameObject upSpeedButton;
@@ -23,8 +24,10 @@ public class OptionController : MonoBehaviour {
 	public GameObject commaUpAdjustmentButton;
 	public GameObject downAdjustmentButton;
 	public GameObject commaDownAdjustmentButton;
+	public GameObject returnButton;
+	public GameObject saveAndMoveSelectButton;
 	MusicOption mo = new MusicOption();
-	private string filePath = "Resources/MusicOption.json";
+	private string filePath = "Assets/Resources/MusicOption.json";
 	private float maxSpeed = 20.0f;
 	private int maxSize = 5;
 
@@ -50,13 +53,15 @@ public class OptionController : MonoBehaviour {
 	void Start () {
 		json = Resources.Load("MusicOption").ToString();
 		JsonUtility.FromJsonOverwrite(json,mo);
+		Debug.Log("json"+json);
 
-		Debug.Log(mo.speed);
-		Debug.Log(mo.size);
-		Debug.Log(mo.thickness);
-		Debug.Log(mo.musicVol);
-		Debug.Log(mo.BGMVol);
-		Debug.Log(mo.adjustment);
+		Debug.Log("value");
+		Debug.Log("speed"+mo.speed);
+		Debug.Log("size"+mo.size);
+		Debug.Log("thickness"+mo.thickness);
+		Debug.Log("musicVol"+mo.musicVol);
+		Debug.Log("BGMVol"+mo.BGMVol);
+		Debug.Log("adjustment"+mo.adjustment);
 
 		File.WriteAllText(filePath, json);
 	}
@@ -73,6 +78,7 @@ public class OptionController : MonoBehaviour {
 			mo.speed = maxSpeed;
 		}
 		File.WriteAllText(filePath, json);
+		Debug.Log("json"+json);
 	}
 
 	public void commaUpSpeed(){
@@ -208,6 +214,16 @@ public class OptionController : MonoBehaviour {
 
 	public void commaDownAdjustment(){
 		mo.adjustment -= 0.1f;
+		Debug.Log(json);
 		File.WriteAllText(filePath, json);
+	}
+
+	public void returnSelect(){
+		SceneManager.LoadScene("select");
+	}
+
+	public void saveAndMoveSelect(){
+		File.WriteAllText(filePath, json);
+		SceneManager.LoadScene("select");
 	}
 }

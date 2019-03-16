@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class resultUI : MonoBehaviour {
 
@@ -13,6 +14,7 @@ public class resultUI : MonoBehaviour {
 	}
 	private float totalScoreSum = 0F;
 	private float totalScoreAccuracy = 0F;
+	public Text scoreText;
 
 	private Dictionary<string, int[]> Score = new Dictionary<string, int[]> ();
 	private Dictionary<int, float> SCOREWEIGHT =  new Dictionary<int, float> ()
@@ -41,8 +43,7 @@ public class resultUI : MonoBehaviour {
 			ScoreSum["Swipe"] = calcScoreSum (Score["Swipe"]);
 		}
 		calcTotalScoreSum ();
-		Text scoreText = score_object.GetComponent<Text> ();
-		scoreText.text = string.Format ("{0:D6}", (int) totalScoreSum);
+		StartCoroutine(ScoreAnimator(totalScoreSum, 4F));
 		//したいこと各ノーツごとに結果の割合を詳細表示
 
 	}
@@ -71,5 +72,40 @@ public class resultUI : MonoBehaviour {
 		}
 		totalScoreAccuracy = ScoreSumWeighted / ScoreNotesCountAll * SCOREWEIGHT[(int)Detection.perfect];
 		totalScoreSum = (float)SCORECEILING * totalScoreAccuracy;
+	}
+
+	public void onClickReplay(){
+ 		SceneManager.LoadScene("play");
+	}
+	public void onClickContinue(){
+ 		SceneManager.LoadScene("select");
+	}
+	private IEnumerator ScoreAnimator(float generalScore, float duration)
+	{
+
+		scoreText = score_object.GetComponent<Text> ();
+		// 
+		// 開始時間
+		float startFrame = Time.time;
+ 
+		// 終了時間
+		float endFrame = startFrame + duration;
+ 
+		while (Time.time < endFrame){
+			// 現在の時間の割合
+			float timeRate = (Time.time - startFrame) / duration;
+			float updateScore = generalScore * easeInOut(timeRate);// + generalScore; 
+			// テキストの更新
+ 			scoreText.text = string.Format ("{0:D6}", (int) updateScore);
+			// 1フレーム待つ
+			yield return null;
+			
+		} 
+ 
+		// 最終的な着地のスコア
+		scoreText.text = string.Format ("{0:D6}", (int) generalScore);
+	}
+	private float easeInOut(float t){
+		return - (Mathf.Cos(Mathf.PI*t) - 1.0F)/2.0F;
 	}
 }

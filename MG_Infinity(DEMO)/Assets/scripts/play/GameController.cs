@@ -125,6 +125,10 @@ public class GameController : MonoBehaviour {
 				ending();
 				break;
 		}
+
+		if (Input.GetMouseButton(1)) {
+			Debug.Log(GameController.score["Hit"][0].ToString() + GameController.score["Hit"][1].ToString() + GameController.score["Hit"][2].ToString() + GameController.score["Hit"][3].ToString());
+		}
 	}
 
 	void beforeTouchToStart() {
@@ -164,8 +168,8 @@ public class GameController : MonoBehaviour {
 		}
 
 		for (int i = 0; i < scanningRange; i++) {
-			if (chart.notesTime[numberOfInstantiatedNotes + i][0] + 0.001 - gap <= time - chart.offset &&
-			    chart.notesTime[numberOfInstantiatedNotes + i][1] + 0.001 + Time.deltaTime - gap >= time - chart.offset) 
+			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time - chart.offset &&
+			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) 
 			{
 				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
 				processedNotesCount++;

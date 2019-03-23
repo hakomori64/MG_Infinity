@@ -65,6 +65,15 @@ public class GameController : MonoBehaviour {
 		public float offset; // [](単位s)
 	}
 
+	[System.Serializable]
+	public class MusicOption {
+		public double speed;
+		public int size;
+		public double thickness;
+		public int musicVol;
+		public int BGMVol;
+		public double adjustment;
+	}
 
 	void Start () {
 		initStaticVariables(); //staticで宣言されている変数の初期化を行う
@@ -74,6 +83,8 @@ public class GameController : MonoBehaviour {
 
 		// calculate point per one note
 		calculatePointOfANote(); //仮想ヒットノーツ一つ当たりの得点を計算し、scorePerOneNoteとbaseScoreを設定する
+
+		setMusicOption();
 
 		// init audioSource
 		initAudioSource(); //audioSourceに曲を設定
@@ -227,8 +238,8 @@ public class GameController : MonoBehaviour {
 			id = SceneController.getID();
 			composer = SceneController.getComposer();
 			title = SceneController.getTitle();
-			speed = SceneController.getSpeed();
-			hit_decision = SceneController.getDecision();
+			//speed = SceneController.getSpeed();
+			//hit_decision = SceneController.getDecision();
 		}
 
 
@@ -332,6 +343,22 @@ public class GameController : MonoBehaviour {
 		};
 		baseScore = 0;
 		scoreValue = 0;
+	}
+
+	void setMusicOption() {
+		MusicOption options = readMusicOption();
+		speed = (float)options.speed;
+		hit_decision = (float)options.adjustment;
+
+	}
+
+	MusicOption readMusicOption() {
+		string path = "MusicOption";
+		string json = Resources.Load(path).ToString();
+
+		MusicOption options = JsonMapper.ToObject<MusicOption>(json);
+
+		return options;
 	}
 
 }

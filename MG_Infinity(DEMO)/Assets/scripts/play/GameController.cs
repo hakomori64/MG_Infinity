@@ -4,44 +4,54 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using LitJson;
+using System;
 
 public class GameController : MonoBehaviour {
-	public class ScoreCount {
-		public int bad = 0, good = 0, great = 0, perfect = 0;
-	}
-	public static ScoreCount scoreCount;
-	public static float scoreValue;
-	private float time = 0f; //used to measure the time.
-	private int id, difficulty; //used to load specified musical score.
-	private string composer, title; //used to load specified musical score.
-	private float speed, hit_decision;
-	public int numberOfInstantiatedNotes = 0;
-	private Phase phase; //used to express the progress status.
-	ChartDataBody chart = new ChartDataBody();
-	public float radius; //radius of the two circles.
-	public GameObject pauseScene;
-	public GameObject pauseButton;
-	public GameObject touchToStart;
-	public GameObject timerController;
-	public GameObject timer;
-	public GameObject startScene;
-	// public GameObject audioObject;
-	public AudioSource audioSource;
-	public Text scoreLabel;
-	public GameObject noteController;
 
-	private List<GameObject> generatedNoteControllers;
+	//このクラスのインスタンスに判定を数えさせる
+	
 
-	private int ceilingScore = 100000;
-	public static int scorePerOneNote;
-	public static int baseScore;
-	public static int total; // sum of virtual hit notes
+	//{perfect, great, good, bad}の順に、ノーツの数を数える
+	public static Dictionary<string, int[]> score = new Dictionary<string, int[]>() 
+	{
+			{"Hit", new int[4] {0, 0, 0, 0}},
+			{"Long", new int[4] {0, 0, 0, 0}},
+			{"Swipe", new int[4] {0, 0, 0, 0}},
+	};
+	
+
+	//public static Score scoreCount; //これに判定を数えさせる
+	public static float scoreValue; //点数を保持する。NoteControllerからこれに得点を加算させる
+	private float time = 0f; //スタートが消えてからの秒数が保持される
+	private int id, difficulty; //曲のid、難易度が保持される
+	private string composer, title; //作曲者、タイトルが保持される
+	private float speed, hit_decision; //ノーツの移動スピード、パーフェクトの時間のずれが保持される
+	public int numberOfInstantiatedNotes = 0; //生成したノーツの数を数える変数
+	private Phase phase; //曲の進行状況を表す F12で定義に移動してみてください
+	ChartDataBody chart = new ChartDataBody(); //譜面データ
+	public float radius; //円の半径
+	public GameObject pauseScene; //ポーズモーダル
+	public GameObject pauseButton; //ポーズモーダルを出すためのボタン
+	public GameObject touchToStart; //touch to start と表示されるボタン。これを押すとカウントダウンが始まる
+	public GameObject timerController; //タイマーを管理する空のゲームオブジェクト。これがカウントダウンを動かす
+	public GameObject timer; //時間を表示するゲームオブジェクト
+
+	public AudioSource audioSource; //曲の再生、停止、音量調整などを統括するオブジェクト
+	public Text scoreLabel; //点数を表示するラベル
+	public GameObject noteController; //noteControllerのプレハブ
+
+	private List<GameObject> generatedNoteControllers; //生成されたnoteControllerのインスタンスたち
+
+	private int ceilingScore = 100000; //天井点
+	public static int scorePerOneNote; //すべてのノーツをヒットノーツに換算しなおした後の一つ当たりのノートの点数
+	public static int baseScore; // 底上げ点数、リザルト画面で判定をつかって得点に追加する
+	public static int total; // 仮想ヒットノーツの合計数
 	enum Phase {
-		beforeTouchToStart,
-		afterTouchToStart,
-		playing,
-		pausing,
-		ending,
+		beforeTouchToStart, // touch to startと表示されている段階
+		afterTouchToStart, // カウントダウンがされている段階
+		playing, // 曲が再生されている段階
+		pausing, // ポーズボタンが押されてポーズモーダルが表示されている段階
+		ending, // 曲が終わった後の後処理の段階
 	}
 
 	[System.Serializable]
@@ -57,48 +67,53 @@ public class GameController : MonoBehaviour {
 
 
 	void Start () {
-		initStaticVariables();
+		initStaticVariables(); //staticで宣言されている変数の初期化を行う
 
 		// init chart
-		initChart();
+		initChart(); //変数chartを設定して、それ経由でデータにアクセスできるようにする
 
 		// calculate point per one note
-		calculatePointOfANote();
+		calculatePointOfANote(); //仮想ヒットノーツ一つ当たりの得点を計算し、scorePerOneNoteとbaseScoreを設定する
 
 		// init audioSource
-		initAudioSource();
+		initAudioSource(); //audioSourceに曲を設定
 
 		// init scoreLabel
-		initScoreLabel();
+		initScoreLabel(); //scoreValueにゼロを設定、scoreLabelにそれを文字列にしたものを設定
 
 		// init noteControllers
-		initNoteControllers();
-		pauseScene.SetActive(false);
-		pauseButton.SetActive(false);
-		timerController.SetActive(false);
-		timer.SetActive(false);
+		initNoteControllers(); //最初にまとめてgeneratedNoteControllersを設定。時間になったらオンしていく
+		pauseScene.SetActive(false); //ポーズモーダルをオフにする
+		pauseButton.SetActive(false); //ポーズボタンをオフにする
+		timerController.SetActive(false); //タイマーをコントロールするオブジェクトをオフにする
+		timer.SetActive(false); //タイマーを非表示にする
 
-		phase = Phase.beforeTouchToStart;
+		phase = Phase.beforeTouchToStart; //フェーズをタッチ前に設定
 	}
 
 	// Update is called once per frame
 	void Update () {
-		switch (phase)
+		switch (phase) //phaseによって処理を振り分け
 		{
 			case Phase.beforeTouchToStart:
-				if (Application.isEditor) {
-					if (Input.GetButtonUp("Fire1")) {
-						beforeTouchToStart();
+
+				if (Application.isEditor) { // UnityEditorで起動したとき
+					if (Input.GetButtonUp("Fire1")) { //左クリックされたら
+						beforeTouchToStart(); //タイマーをオン
 					}
 				} else {
 					Touch[] touches = Input.touches;
 
 					if (touches != null) {
-						beforeTouchToStart();
+						beforeTouchToStart(); //タイマーをオン
 					}
 				}
 				break;
 			case Phase.afterTouchToStart:
+				/*
+				時を刻む。
+				時間が過ぎたら、
+				 */
 				afterTouchToStart();
 				break;
 			case Phase.playing:
@@ -109,6 +124,10 @@ public class GameController : MonoBehaviour {
 			case Phase.ending:
 				ending();
 				break;
+		}
+
+		if (Input.GetMouseButton(1)) {
+			Debug.Log(GameController.score["Hit"][0].ToString() + GameController.score["Hit"][1].ToString() + GameController.score["Hit"][2].ToString() + GameController.score["Hit"][3].ToString());
 		}
 	}
 
@@ -124,26 +143,6 @@ public class GameController : MonoBehaviour {
 		if (timerController.activeInHierarchy == false) {
 			time += Time.deltaTime;
 		}
-
-		int processedNotesCount = 0;
-		float gap = radius/speed; // time between InstantiatedNotes and Touched time
-		int scanningRange;
-		if (chart.notesTime.Length - numberOfInstantiatedNotes >= 10) {
-			scanningRange = 10;
-		} else {
-			scanningRange = chart.notesTime.Length - numberOfInstantiatedNotes;
-		}
-
-		for (int i = 0; i < scanningRange; i++) {
-			if (chart.notesTime[numberOfInstantiatedNotes + i][0] - gap <= time - chart.offset &&
-			    chart.notesTime[numberOfInstantiatedNotes + i][1] + Time.deltaTime - gap >= time - chart.offset) {
-				generatedNoteControllers[numberOfInstantiatedNotes + i].SetActive(true);
-				processedNotesCount++;
-			}
-		}
-
-		numberOfInstantiatedNotes += processedNotesCount;
-
 
 		if (time > chart.offset) {
 			//time = 0;
@@ -270,8 +269,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	void initScoreLabel() {
-		GameController.scoreValue = 0;
-		scoreLabel.text = ((int)(GameController.scoreValue)).ToString("D6");
+		scoreValue = 0;
+		scoreLabel.text = ((int)(scoreValue)).ToString("D6");
 	}
 
 	void initNoteControllers() {
@@ -281,19 +280,22 @@ public class GameController : MonoBehaviour {
 			GameObject _noteController = Instantiate(noteController, transform.position, transform.rotation) as GameObject;
 			_noteController.SetActive(false);
 			NoteController noteControllerComponent = _noteController.GetComponent<NoteController>();
-			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, GameController.scorePerOneNote);
+			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, scorePerOneNote);
 			generatedNoteControllers.Add(_noteController);
 		}
 	}
 
 	void calculatePointOfANote() {
 		for (int i = 0; i < chart.route.Length; i++) {
+			if (Mathf.Abs((float)chart.notesTime[i][1] - (float)chart.notesTime[i][0]) > Mathf.Epsilon && chart.route[i].Length == 1) {
+				total += 1;
+			} 
 			total += chart.route[i].Length;
 		}
 
-		Debug.Log(GameController.total);
-		GameController.scorePerOneNote = (int)(this.ceilingScore / GameController.total);
-		GameController.baseScore = this.ceilingScore - GameController.scorePerOneNote * GameController.total;
+		Debug.Log(total);
+		scorePerOneNote = (int)(this.ceilingScore / total);
+		baseScore = this.ceilingScore - scorePerOneNote * total;
 	}
 
 	public static int getScorePerOneNote() {
@@ -308,20 +310,28 @@ public class GameController : MonoBehaviour {
 		return scoreValue;
 	}
 
-	public static ScoreCount GetScoreCount() {
-		return scoreCount;
+	
+	public static Dictionary<string, int[]> GetScoreCount() {
+		return score;
 	}
+	
 
 	public static int getTotal() {
 		return total;
 	}
 
 	void initStaticVariables() {
-		GameController.scorePerOneNote = 0;
-		GameController.total = 0;
-		GameController.scoreCount = new ScoreCount();
-		GameController.baseScore = 0;
-		GameController.scoreValue = 0;
+		// staticで宣言されている変数を0で初期化する
+		scorePerOneNote = 0;
+		total = 0;
+		score = new Dictionary<string, int[]>()
+		{
+			{"Hit", new int[4] {0, 0, 0, 0}},
+			{"Long", new int[4] {0, 0, 0, 0}},
+			{"Swipe", new int[4] {0, 0, 0, 0}},
+		};
+		baseScore = 0;
+		scoreValue = 0;
 	}
 
 }

@@ -337,6 +337,10 @@ namespace LitJson
 
                 Type json_type = reader.Value.GetType ();
 
+                if (inst_type == typeof(long) && json_type == typeof(int)) {
+                    json_type = typeof(long);
+                }
+
                 if (value_type.IsAssignableFrom (json_type))
                     return reader.Value;
 

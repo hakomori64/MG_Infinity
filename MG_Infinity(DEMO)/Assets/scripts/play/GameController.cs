@@ -125,6 +125,10 @@ public class GameController : MonoBehaviour {
 				ending();
 				break;
 		}
+
+		if (Input.GetMouseButton(1)) {
+			Debug.Log(GameController.score["Hit"][0].ToString() + GameController.score["Hit"][1].ToString() + GameController.score["Hit"][2].ToString() + GameController.score["Hit"][3].ToString());
+		}
 	}
 
 	void beforeTouchToStart() {

@@ -28,8 +28,6 @@ public class SceneController : MonoBehaviour {
 
 	[System.Serializable]
 	public class songsInformation {
-		public float hit_decision;
-		public float speed;
 		public listSongsInformation[] list;
 	}
 
@@ -40,6 +38,7 @@ public class SceneController : MonoBehaviour {
 		public string composer;
 		public string title;
 		public int play_count;
+		public int[] highscore;
 		public int[] difficulty;
 	}
 
@@ -56,7 +55,7 @@ public class SceneController : MonoBehaviour {
 	private static int stars;
 	private static string composer;
 	private static string title;
-	private static float speed, hit_decision;
+	private static int highscore;
 	private static int sceneDif=0; //scene内の難易度を扱う変数　easy:0,medium:1,hard:2,infinity:3 scene内じゃなくて全体になりました。
 
 	//このシーン内で使う変数
@@ -108,14 +107,13 @@ public class SceneController : MonoBehaviour {
 		stars = si.list[listPath[n]].difficulty[dif];
 		composer = si.list[listPath[n]].composer;
 		title = si.list[listPath[n]].title;
-		speed = si.speed;
-		hit_decision = si.hit_decision;
+		highscore = si.list[listPath[n]].highscore[dif];
+
 		Debug.Log("ID"+musicID);
 		Debug.Log("stars"+stars);
 		Debug.Log("composer"+composer);
 		Debug.Log("title"+title);
-		Debug.Log("speed"+speed);
-		Debug.Log("hitDecision"+hit_decision);
+		Debug.Log("highscore"+highscore);
 	}
 
 	public void setListPath(int sortMode){
@@ -156,13 +154,10 @@ public class SceneController : MonoBehaviour {
 		return title;
 	}
 
-	public static float getSpeed() {
-		return speed;
+	public static int getHighscore(){
+		return highscore;
 	}
 
-	public static float getDecision() {
-		return hit_decision;
-	}
 
 	//returnボタン
 	public void moveStart(){

@@ -24,6 +24,7 @@ public class NoteController : MonoBehaviour {
 	}
 
 	public int id;
+	private ParticleSystem particleSystem;
 	private string route;
 	private double start, end;
 	private float radius, speed;
@@ -52,6 +53,8 @@ public class NoteController : MonoBehaviour {
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
 		TouchPointController = GameObject.Find("TouchPointController").GetComponent<TouchPointController>();
+		particleSystem = (Instantiate (Resources.Load("prefabs/particleSystem"), new Vector3(-2.5f, -2, -5), Quaternion.identity, null) as GameObject).GetComponent<ParticleSystem>();
+		//particleSystem.Play();
 		initChart();
 		this.speed = (float)chart.speed;
 		detectKindsOfNote();
@@ -79,6 +82,9 @@ public class NoteController : MonoBehaviour {
 			this.gameObject.SetActive(false);
 			GameController.scoreValue += this.score;
 		}
+
+		//particleSystem.transform.position = this.notes[0].transform.position;
+		//if (Time.frameCount % 60 == 0) particleSystem.Emit(1);
 
 		detectAccuracy();
 		updateTouchPhaseList();
@@ -141,6 +147,8 @@ public class NoteController : MonoBehaviour {
 				if (timeDifference > this.goodBoundary + this.ttl) {
 					GameController.score["Hit"][3]++;
 					this.isTouchDetectionDone = true;
+					particleSystem.transform.position = this.notes[0].transform.position;
+					particleSystem.Emit(1);
 				}
 				timeDifference = Mathf.Abs(timeDifference);
 		    	if ((touchPhaseList[Convert.ToInt32(this.route, 16)][0] == TouchPhase.Ended && touchPhaseList[Convert.ToInt32(this.route, 16)][1] == TouchPhase.Moved)
@@ -156,6 +164,9 @@ public class NoteController : MonoBehaviour {
 							GameController.score["Hit"][0]++; //perfect	
 						}
 						this.isTouchDetectionDone = true;
+						particleSystem.transform.position = this.notes[0].transform.position;
+						//particleSystem.transform.position = new Vector3(0, 0, 0);
+						particleSystem.Emit(1);
 					} else {
 						Debug.Log(id + " 遠すぎて判定外");
 					}

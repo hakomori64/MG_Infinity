@@ -1,8 +1,8 @@
 {
-    "speed" : 2.0,
+    "speed" : 1.0,
     "size" : 3,
     "thickness" : 4.0,
-    "musicVol" : 5,
-    "BGMVol" : 6,
-    "adjustment" : 7.0
+    "musicVol" : 0.1,
+    "BGMVol" : 1,
+    "adjustment" : 0
 }

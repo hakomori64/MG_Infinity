@@ -45,6 +45,7 @@ public class Note : MonoBehaviour
     public float distanceOfHead = 0, distanceOfTail = 0;
     private int routeLength;
     private Note parentNote;
+    private float thickness;
 
     // Use this for initialization
     void Start()
@@ -79,8 +80,8 @@ public class Note : MonoBehaviour
                     lineObject = Instantiate((GameObject)Resources.Load("prefabs/Line"), transform.position, transform.rotation);
                     lineObject.transform.parent = transform;
                     lineRenderer = lineObject.GetComponent<LineRenderer>();
-                    lineRenderer.startWidth = 0.3f;
-                    lineRenderer.endWidth = 0.3f;
+                    lineRenderer.startWidth = thickness;
+                    lineRenderer.endWidth = thickness;
                     lineRenderer.positionCount = 2;
                     this.distanceOfTail = radius;
                     break;
@@ -157,7 +158,7 @@ public class Note : MonoBehaviour
         noteTime += Time.deltaTime;
     }
 
-    public void Create(string route, int id, double start, double end, float radius, float speed, int kindOfNote, bool head)
+    public void Create(string route, int id, double start, double end, float radius, float speed, int kindOfNote, bool head, float thickness)
     {
         this.route = route;
         this.id = id;
@@ -167,6 +168,7 @@ public class Note : MonoBehaviour
         this.speed = speed;
         this.kindOfNote = kindOfNote;
         this.head = head;
+        this.thickness = thickness;
     }
 
     void controlHitNote()

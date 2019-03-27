@@ -18,8 +18,8 @@ public class NoteController : MonoBehaviour {
 		public double speed;
 		public int size;
 		public double thickness;
-		public int musicVol;
-		public int BGMVol;
+		public double musicVol;
+		public double BGMVol;
 		public double adjustment;
 	}
 
@@ -48,7 +48,7 @@ public class NoteController : MonoBehaviour {
 	private float greatFactor = 0.5f;
 	private double perfectBoundary = 0.028;
 	private float perfectFactor = 1.0f;
-
+	private float size, thickness;
 	private List<List<TouchPhase>> touchPhaseList = new List<List<TouchPhase>>();
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
@@ -92,7 +92,7 @@ public class NoteController : MonoBehaviour {
 
 		time += Time.deltaTime;
 	}
-	public void Create (int id, string route, double start, double end, float radius, float speed, int scorePerOneNote) {
+	public void Create (int id, string route, double start, double end, float radius, float speed, int scorePerOneNote, float size, float thickness) {
 		this.id = id;
 		this.route = route;
 		this.start = start;
@@ -100,6 +100,8 @@ public class NoteController : MonoBehaviour {
 		this.radius = radius;
 		this.speed = speed;
 		this.scorePerOneNote = scorePerOneNote;
+		this.size = size;
+		this.thickness = thickness;
 	}
 
 	//
@@ -111,8 +113,9 @@ public class NoteController : MonoBehaviour {
 			this.kindOfNote = KindsOfNote.HitNotes;
 			this.notes = new GameObject[1];
 			this.notes[0] = Instantiate(notePrefab, transform.position, transform.rotation);
+			this.notes[0].transform.localScale = new Vector3(size, size, size);
 			this.noteComponents[0] = this.notes[0].GetComponent<Note>();
-			this.noteComponents[0].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
+			this.noteComponents[0].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true, thickness);
 		} else { //long | swipe note
 			if (this.route.Length == 1) {
 				this.kindOfNote = KindsOfNote.LongNotes;
@@ -122,11 +125,13 @@ public class NoteController : MonoBehaviour {
 			this.notes = new GameObject[2];
 			this.noteComponents = new Note[2];
 			this.notes[0] = Instantiate(notePrefab, transform.position, transform.rotation);
+			this.notes[0].transform.localScale = new Vector3(size, size, size);
 			this.noteComponents[0] = this.notes[0].GetComponent<Note>();
-			this.noteComponents[0].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true);
+			this.noteComponents[0].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, true, thickness);
 			this.notes[1] = Instantiate(notePrefab, transform.position, transform.rotation);
+			this.notes[0].transform.localScale = new Vector3(size, size, size);
 			this.noteComponents[1] = this.notes[1].GetComponent<Note>();
-			this.noteComponents[1].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, false);
+			this.noteComponents[1].Create(this.route, this.id, this.start, this.end, this.radius, this.speed, (int)this.kindOfNote, false, thickness);
 			notes[1].transform.parent = notes[0].transform;// 紐づけ
 
 

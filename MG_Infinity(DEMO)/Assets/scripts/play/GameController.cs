@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour {
 	private int id, difficulty; //曲のid、難易度が保持される
 	private string composer, title; //作曲者、タイトルが保持される
 	private float speed, hit_decision; //ノーツの移動スピード、パーフェクトの時間のずれが保持される
+	private float size, thickness, musicVol;
 	public int numberOfInstantiatedNotes = 0; //生成したノーツの数を数える変数
 	private Phase phase; //曲の進行状況を表す F12で定義に移動してみてください
 	ChartDataBody chart = new ChartDataBody(); //譜面データ
@@ -70,8 +71,8 @@ public class GameController : MonoBehaviour {
 		public double speed;
 		public int size;
 		public double thickness;
-		public int musicVol;
-		public int BGMVol;
+		public double musicVol;
+		public double BGMVol;
 		public double adjustment;
 	}
 
@@ -277,6 +278,8 @@ public class GameController : MonoBehaviour {
 		//audioSource = audioObject.GetComponent<AudioSource>();
 		string path = "music/" + id.ToString("D5") + "_" + composer + "_" + title;
 		audioSource.clip = Resources.Load<AudioClip>(path);
+		audioSource.volume = musicVol;
+		Debug.Log("audioSouce.volume" + audioSource.volume);
 	}
 
 	void initScoreLabel() {
@@ -291,7 +294,7 @@ public class GameController : MonoBehaviour {
 			GameObject _noteController = Instantiate(noteController, transform.position, transform.rotation) as GameObject;
 			_noteController.SetActive(false);
 			NoteController noteControllerComponent = _noteController.GetComponent<NoteController>();
-			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, scorePerOneNote);
+			noteControllerComponent.Create(i, chart.route[i], chart.notesTime[i][0], chart.notesTime[i][1], this.radius, this.speed, scorePerOneNote, size,  thickness);
 			generatedNoteControllers.Add(_noteController);
 		}
 	}
@@ -349,6 +352,10 @@ public class GameController : MonoBehaviour {
 		MusicOption options = readMusicOption();
 		speed = (float)options.speed;
 		hit_decision = (float)options.adjustment;
+		thickness = (float)options.thickness;
+		size = (float)options.size;
+		musicVol = (float)options.musicVol;
+		Debug.Log("musicVol" + musicVol);
 
 	}
 

@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OptionController : MonoBehaviour {
 	public GameObject upSpeedButton;
@@ -23,17 +24,26 @@ public class OptionController : MonoBehaviour {
 	public GameObject commaUpAdjustmentButton;
 	public GameObject downAdjustmentButton;
 	public GameObject commaDownAdjustmentButton;
-	MusicOption mo = new MusicOption();
-	private string filePath = "Resources/MusicOption.json";
-	private float maxSpeed = 20.0f;
-	private int maxSize = 5;
+	public GameObject returnButton;
+	public GameObject saveAndMoveSelectButton;
 
-	private float maxThickness = 2;
-	private float minThickness = 0.5f;
+	MusicOption mo;
+
+	private string filePath = "Assets/Resources/MusicOption.json";
+
+	private int maxSpeed = 20*10;
+	private int maxSize = 10;
+	private int maxThickness = 2*10;
+	private int minThickness = (int)(0.5*10);
 	private int maxMusicVol = 100;
 	private int maxBGMVol = 100;
 
+	private int sp;
+	private int th;
+	private int ad;
+
 	private string json;
+
 
 	[Serializable]
 	public class MusicOption
@@ -49,16 +59,23 @@ public class OptionController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		json = Resources.Load("MusicOption").ToString();
-		JsonUtility.FromJsonOverwrite(json,mo);
+		mo = JsonUtility.FromJson<MusicOption>(json);
+		Debug.Log("json"+json.ToString());
 
-		Debug.Log(mo.speed);
-		Debug.Log(mo.size);
-		Debug.Log(mo.thickness);
-		Debug.Log(mo.musicVol);
-		Debug.Log(mo.BGMVol);
-		Debug.Log(mo.adjustment);
+		Debug.Log("mo"+ mo.ToString());
 
-		File.WriteAllText(filePath, json);
+		Debug.Log("value");
+		Debug.Log("speed"+mo.speed);
+		Debug.Log("size"+mo.size);
+		Debug.Log("thickness"+mo.thickness);
+		Debug.Log("musicVol"+mo.musicVol);
+		Debug.Log("BGMVol"+mo.BGMVol);
+		Debug.Log("adjustment"+mo.adjustment);
+
+		sp = (int)(mo.speed*10);
+		th = (int)(mo.thickness*10);
+		ad = (int)(mo.adjustment*10);
+
 	}
 	
 	// Update is called once per frame
@@ -67,101 +84,102 @@ public class OptionController : MonoBehaviour {
 	}
 
 	public void upSpeed(){
-		if(mo.speed <= maxSpeed-1){
-			mo.speed += 1.0f;
+		if(sp <= maxSpeed-10){
+			sp += 10;
 		}else{
-			mo.speed = maxSpeed;
+			sp = maxSpeed;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("speed "+ sp);
 	}
 
 	public void commaUpSpeed(){
-		if(mo.speed <= maxSpeed-0.1f){
-			mo.speed += 0.1f;
+		if(sp <= maxSpeed-1){
+			sp += 1;
 		}else{
-			mo.speed = maxSpeed;
+			sp = maxSpeed;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("speed "+ sp);
 	}
 
 	public void downSpeed(){
-		if(mo.speed >= 2.0){
-			mo.speed -= 1.0f;
+		if(sp >= 20){
+			sp -= 10;
 		}else{
-			mo.speed = 1.0f;
+			sp = 10;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("speed "+ sp);
 	}
 
 	public void commaDownSpeed(){
-		if(mo.speed >= 1.1){
-			mo.speed -= 0.1f;
+		if(sp >= 11){
+			sp -= 1;
 		}else{
-			mo.speed = 1.0f;
+			sp = 10;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("speed "+ sp);
 	}
 
 	public void upSize(){
-		if(mo.size < 10){
+		if(mo.size < maxSize){
 			mo.size += 1;
 		}else{
-			mo.size = 10;
+			mo.size = maxSize;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("size "+ mo.size);
 	}
+
 	public void downSize(){
 		if(mo.size > 1){
 			mo.size -= 1;
 		}else{
 			mo.size = 1;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("size "+ mo.size);
 	}
 
 	public void upThickness(){
-		if(mo.thickness <= maxThickness-1){
-			mo.thickness += 1.0f;
+		if(th <= maxThickness-10){
+			th += 10;
 		}else{
-			mo.thickness = maxThickness;
+			th = maxThickness;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("thickness "+ th);
 	}
 
 	public void commaUpThickness(){
-		if(mo.thickness <= maxThickness-0.1f){
-			mo.thickness += 0.1f;
+		if(th <= maxThickness-1){
+			th += 1;
 		}else{
-			mo.thickness = maxThickness;
+			th = maxThickness;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("thickness "+ th);
 	}
 
 	public void downThickness(){
-		if(mo.thickness >= minThickness+1.0f){
-			mo.thickness -= 1.0f;
+		if(th >= minThickness+10){
+			th -= 10;
 		}else{
-			mo.thickness = minThickness;
+			th = minThickness;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("thickness "+ th);
 	}
 
 	public void commaDownThickness(){
-		if(mo.thickness >= minThickness+0.1f){
-			mo.thickness -= 0.1f;
+		if(th >= minThickness+1){
+			th -= 1;
 		}else{
-			mo.thickness = minThickness;
+			th = minThickness;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("thickness "+ th);
 	}
 
 	public void upMusicVol(){
-		if(mo.musicVol >= maxMusicVol-1){
+		if(mo.musicVol <= maxMusicVol-1){
 			mo.musicVol += 1;
 		}else{
 			mo.musicVol = maxMusicVol;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("musicVolume "+ mo.musicVol);
 	}
 
 	public void downMusicVol(){
@@ -170,16 +188,16 @@ public class OptionController : MonoBehaviour {
 		}else{
 			mo.musicVol = 0;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("musicVolume "+ mo.musicVol);
 	}
 
 	public void upBGMVol(){
-		if(mo.BGMVol >= maxBGMVol-1){
+		if(mo.BGMVol <= maxBGMVol-1){
 			mo.BGMVol += 1;
 		}else{
 			mo.BGMVol = maxBGMVol;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("BGMVolume "+ mo.BGMVol);
 	}
 
 	public void downBGMVol(){
@@ -188,26 +206,40 @@ public class OptionController : MonoBehaviour {
 		}else{
 			mo.BGMVol = 0;
 		}
-		File.WriteAllText(filePath, json);
+		Debug.Log("BGMVolume "+ mo.BGMVol);
 	}
 	
 	public void upAdjustment(){
-		mo.adjustment += 1.0f;
-		File.WriteAllText(filePath, json);
+		ad += 10;
+		Debug.Log("adjustment "+ ad);
 	}
 
 	public void commaUpAdjustment(){
-		mo.adjustment += 0.1f;
-		File.WriteAllText(filePath, json);
+		ad += 1;
+		Debug.Log("adjustment "+ ad);
 	}
 
 	public void downAdjustment(){
-		mo.adjustment -= 1.0f;
-		File.WriteAllText(filePath, json);
+		ad -= 10;
+		Debug.Log("adjustment "+ ad);
 	}
 
 	public void commaDownAdjustment(){
-		mo.adjustment -= 0.1f;
+		ad -= 1;
+		Debug.Log("adjustment "+ ad);
+	}
+
+	public void returnSelect(){
+		SceneManager.LoadScene("select");
+	}
+
+	public void saveAndMoveSelect(){
+		mo.speed = (float)sp/10;
+		mo.thickness = (float)th/10;
+		mo.adjustment = (float)ad/10;
+		string serialisedItemJson = JsonUtility.ToJson(mo);
+		Debug.Log("serialisedItemJson " + serialisedItemJson);
 		File.WriteAllText(filePath, json);
+		SceneManager.LoadScene("select");
 	}
 }

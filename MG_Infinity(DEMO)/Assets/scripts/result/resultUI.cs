@@ -53,6 +53,17 @@ public class resultUI : MonoBehaviour {
 
 	}
 
+
+	// ------------------------------------------------------------
+	// Data Formatter
+	// ------------------------------------------------------------
+
+
+
+	// ------------------------------------------------------------
+	// Score Calculation
+	// ------------------------------------------------------------
+
 	int calcScoreSum (int[] arr) {
 		int sum = 0;
 		foreach (int temp_score in arr) {
@@ -74,12 +85,21 @@ public class resultUI : MonoBehaviour {
 		totalScoreSum = (float)SCORECEILING * totalScoreAccuracy;
 	}
 
+	// ------------------------------------------------------------
+	// User Interface
+	// ------------------------------------------------------------
+
 	public void onClickReplay(){
  		SceneManager.LoadScene("play");
 	}
 	public void onClickContinue(){
  		SceneManager.LoadScene("select");
 	}
+
+	// ------------------------------------------------------------
+	// User Interface - Animation
+	// ------------------------------------------------------------
+
 	private IEnumerator ScoreAnimator(float generalScore, float duration)
 	{
 

@@ -16,3 +16,5 @@ MG_Infinity(DEMO)/Assembly-CSharp.csproj
 MG_Infinity(DEMO)/MG_Infinity(DEMO).sln
 MG_Infinity(DEMO)/.vs*
 
+.DS_Store
+MG_Infinity(DEMO)/.DS_Store

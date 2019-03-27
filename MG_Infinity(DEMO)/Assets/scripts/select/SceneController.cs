@@ -39,11 +39,11 @@ public class SceneController : MonoBehaviour {
 		public string title;
 		public int play_count;
 		public int[] highscore;
-		public int[] difficulty;
+		public int difficulty;
 	}
 
 	[System.Serializable]
-	public class MusicDateList
+	public class MusicDataList
 	{
 		public string[] musicTitleList;
 		public string[] composerList;
@@ -144,7 +144,7 @@ public class SceneController : MonoBehaviour {
 	public static int getDifficulty(){
 		return sceneDif;
 	}
-	public static int getSters(){
+	public static int getStars(){
 		return stars;
 	}
 	public static string getComposer(){
@@ -154,7 +154,7 @@ public class SceneController : MonoBehaviour {
 		return title;
 	}
 
-	public static int getHighscore(){
+	public static int[] getHighscore(){
 		return highscore;
 	}
 

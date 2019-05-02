@@ -49,6 +49,7 @@ public class NoteController : MonoBehaviour {
 	private double perfectBoundary = 0.028;
 	private float perfectFactor = 1.0f;
 	private float size, thickness;
+	private int index_for_long_and_swipe = 0;
 	private List<List<TouchPhase>> touchPhaseList = new List<List<TouchPhase>>();
 	void Start () {
 		notePrefab = (GameObject)Resources.Load("prefabs/Note");
@@ -179,12 +180,33 @@ public class NoteController : MonoBehaviour {
 				}
 				break; 
 	        case 1:
-	            if (this.touchSuccessful == false) return;
+	            if (time < radius / speed - goodBoundary) {
+					
+	            } else if (radius / speed - goodBoundary <= time < radius / speed + goodBoundary) {
+					if (touchPhaseList[Convert.ToInt32(this.route, 16)][0] == TouchPhase.Began) {
+						float timeDifference = Mathf.Abs(time - radius / speed + (float)chart.adjustment);
 
-	            if (Mathf.Abs(time - radius / speed) > 0.080) {
-	                this.touchSuccessful = false;
-	            }
+						if ()
+						
+					}
+				} else if (radius / speed + goodBoundary <= time < radius / speed + end - start - goodBoundary) {
+
+				} else if (radius / speed + end - start - goodBoundary <= time < end - start + radius / speed + goodBoundary) {
+
+				} else {
+					GameController.score["Swipe"][3]++;
+				}
 	            break;
+			case 2:
+				if (time <= radius / speed - goodBoundary) {
+					this.isTouchDetectionDone = true;
+					GameController.score["Swipe"][3] += this.route.Length; 
+				} else {
+					if (isTouched()) {
+
+					}
+				}
+				break;
   		}
 	}
 
@@ -210,7 +232,9 @@ public class NoteController : MonoBehaviour {
 		Debug.Log(touchPhaseList[8][0] + " " + touchPhaseList[8][1]);
 	}
 
-	
+	bool isTouched() {
+		return (Input.GetMouseButton(0) || Input.GetMouseButton(0) || Input.touchCount > 0)
+	}
 }
 
 

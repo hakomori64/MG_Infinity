@@ -35,7 +35,7 @@ public class NoteController : MonoBehaviour {
 	private int score = 0;
 	public GameObject notePrefab;
 	private TouchPointController TouchPointController;
-
+	private Material[] mt = new Material[4];
 	private MusicOption chart = new MusicOption();
 	public GameObject[] notes;
 	private bool isTouchDetectionDone = false; 
@@ -180,21 +180,23 @@ public class NoteController : MonoBehaviour {
 				}
 				break; 
 	        case 1:
-	            if (time < radius / speed - goodBoundary) {
+	            if (time < radius / speed - goodBoundary - ttl) {
 					
-	            } else if (radius / speed - goodBoundary <= time < radius / speed + goodBoundary) {
+	            } else if (radius / speed - goodBoundary - ttl <= time && time < radius / speed + goodBoundary + ttl) {
 					if (touchPhaseList[Convert.ToInt32(this.route, 16)][0] == TouchPhase.Began) {
-						float timeDifference = Mathf.Abs(time - radius / speed + (float)chart.adjustment);
+						timeDifference = Mathf.Abs(time - radius / speed + (float)chart.adjustment);
 
-						if ()
+						if (timeDifference > this.goodBoundary) {
+							
+						}
 						
 					}
-				} else if (radius / speed + goodBoundary <= time < radius / speed + end - start - goodBoundary) {
+				} else if (radius / speed + goodBoundary + ttl <= time && time < radius / speed + end - start - goodBoundary) {
 
-				} else if (radius / speed + end - start - goodBoundary <= time < end - start + radius / speed + goodBoundary) {
+				} else if (radius / speed + end - start - goodBoundary <= time && time < end - start + radius / speed + goodBoundary) {
 
 				} else {
-					GameController.score["Swipe"][3]++;
+					
 				}
 	            break;
 			case 2:
@@ -233,7 +235,7 @@ public class NoteController : MonoBehaviour {
 	}
 
 	bool isTouched() {
-		return (Input.GetMouseButton(0) || Input.GetMouseButton(0) || Input.touchCount > 0)
+		return (Input.GetMouseButton(0) || Input.GetMouseButton(0) || Input.touchCount > 0);
 	}
 }
 
